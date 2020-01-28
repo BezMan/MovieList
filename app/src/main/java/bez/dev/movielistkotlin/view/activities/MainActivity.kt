@@ -1,5 +1,6 @@
 package bez.dev.movielistkotlin.view.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -15,7 +16,6 @@ import bez.dev.movielistkotlin.view.adapters.MoviesListAdapter
 import bez.dev.movielistkotlin.viewmodel.MainListViewModel
 import bez.dev.movielistkotlin.viewmodel.MainListViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlin.time.ExperimentalTime
 
 class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
@@ -130,13 +130,16 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 //        }
 //    }
 
-    @ExperimentalTime
-    override fun onItemClick(cityName: String) {
-//        val intent = Intent(this, DetailForecastActivity::class.java)
-//        intent.putExtra("CITY", cityName)
-//        intent.putExtra("UNIT", storedWeatherUnit)
-//        startActivity(intent)
+    override fun onItemClick(position: Int) {
+        val intent = Intent(this, DetailActivity::class.java)
+        val obj = listMovieObjects[position]
+        intent.putExtra(EXTRA_MOVIE, obj)
+        startActivity(intent)
+    }
 
+
+    companion object {
+        const val EXTRA_MOVIE = "EXTRA_MOVIE"
     }
 
 }

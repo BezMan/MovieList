@@ -68,7 +68,7 @@ class MoviesListAdapter(private var context: Context, itemList: ArrayList<Movie>
 
     // parent activity will implement this method to respond to click events
     interface ItemClickListener {
-        fun onItemClick(movieTitle: String)
+        fun onItemClick(position: Int)
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
@@ -82,7 +82,7 @@ class MoviesListAdapter(private var context: Context, itemList: ArrayList<Movie>
         }
 
         override fun onClick(v: View?) {
-            mClickListener?.onItemClick(v?.tvTitle?.text.toString())
+            mClickListener?.onItemClick(adapterPosition)
         }
 
     }
