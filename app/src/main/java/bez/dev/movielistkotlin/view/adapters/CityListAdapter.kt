@@ -10,21 +10,21 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import bez.dev.movielistkotlin.R
-import bez.dev.movielistkotlin.model.CityObj
+import bez.dev.movielistkotlin.model.Movie
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.list_item_city.view.*
+import kotlinx.android.synthetic.main.list_item_movie.view.*
 
-class CityListAdapter(private var context: Context, itemList: ArrayList<CityObj>) :
+class CityListAdapter(private var context: Context, itemList: ArrayList<Movie>) :
     RecyclerView.Adapter<CityListAdapter.ViewHolder>() {
-    private var filteredList: ArrayList<CityObj> = itemList
-    private var fullList: ArrayList<CityObj> = itemList
+    private var filteredList: ArrayList<Movie> = itemList
+    private var fullList: ArrayList<Movie> = itemList
 
     companion object {
         var mClickListener: ItemClickListener? = null
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.list_item_city, p0, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.list_item_movie, p0, false)
         return ViewHolder(view)
     }
 
@@ -36,8 +36,8 @@ class CityListAdapter(private var context: Context, itemList: ArrayList<CityObj>
             var search = query
             search = search.toLowerCase()
             for (item in fullList) {
-                val cityName = item.nameCity.toLowerCase()
-                if (cityName.contains(search)) {
+                val movieTitle = item.title.toLowerCase()
+                if (movieTitle.contains(search)) {
                     filteredList.add(item)
                 }
             }
@@ -48,12 +48,10 @@ class CityListAdapter(private var context: Context, itemList: ArrayList<CityObj>
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         if (!filteredList.isNullOrEmpty()) {
-            viewHolder.tvCity.text = filteredList[position].nameCity
-            viewHolder.tvDescription.text = filteredList[position].description
-            viewHolder.tvTempMax.text = "max: ${filteredList[position].tempMax}"
-            viewHolder.tvTempMin.text = "min: ${filteredList[position].tempMin}"
+            viewHolder.tvTitle.text = filteredList[position].title
+            viewHolder.tvReleaseYear.text = filteredList[position].releaseYear.toString()
 
-            Glide.with(context).load(filteredList[position].urlImage).into(viewHolder.iconImg)
+            Glide.with(context).load(filteredList[position].image).into(viewHolder.iconImg)
         }
     }
 
@@ -70,14 +68,12 @@ class CityListAdapter(private var context: Context, itemList: ArrayList<CityObj>
 
     // parent activity will implement this method to respond to click events
     interface ItemClickListener {
-        fun onItemClick(cityName: String)
+        fun onItemClick(movieTitle: String)
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
-        var tvCity: TextView = view.tvCity
-        var tvDescription: TextView = view.tvDescription
-        var tvTempMax: TextView = view.tvTempMax
-        var tvTempMin: TextView = view.tvTempMin
+        var tvTitle: TextView = view.tvTitle
+        var tvReleaseYear: TextView = view.tvReleaseYear
         var iconImg: ImageView = view.iconImg
         private var cardView: CardView = view.cardView
 
@@ -86,7 +82,7 @@ class CityListAdapter(private var context: Context, itemList: ArrayList<CityObj>
         }
 
         override fun onClick(v: View?) {
-            mClickListener?.onItemClick(v?.tvCity?.text.toString())
+            mClickListener?.onItemClick(v?.tvTitle?.text.toString())
         }
 
     }

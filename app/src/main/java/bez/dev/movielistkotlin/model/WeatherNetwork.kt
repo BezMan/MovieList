@@ -16,14 +16,14 @@ class WeatherNetwork : IMainListDataApi {
     private val VERSION = "data/2.5/"
     private val API_ID = "&appid=a6fb62a4df6500bb3078d7e190bd637e"
 
-    var cityList = ArrayList<CityObj>()
-    var liveCityList = MutableLiveData<ArrayList<CityObj>>()
+    var cityList = ArrayList<Movie>()
+    var liveCityList = MutableLiveData<ArrayList<Movie>>()
 
 
     override fun getWeatherByCity(
         cityName: String,
         unit: String?
-    ): MutableLiveData<ArrayList<CityObj>> {
+    ): MutableLiveData<ArrayList<Movie>> {
         val method = "weather?q=$cityName"
         val url = "$URL_BASE$VERSION$method$API_ID$unit"
 
@@ -38,7 +38,7 @@ class WeatherNetwork : IMainListDataApi {
     private fun weatherDataCallback(): HttpResponse {
         return object : HttpResponse {
             override fun httpResponseSuccess(response: String) {
-                val cityData = Gson().fromJson(response, CityObj::class.java)
+                val cityData = Gson().fromJson(response, Movie::class.java)
 //                if (cityData.name.isNotEmpty()) {
 //                    val cityObj = CityObj(cityData.name
 //                            , makeIconURL(cityData.weather[0].icon)
@@ -56,7 +56,7 @@ class WeatherNetwork : IMainListDataApi {
         }
     }
 
-    override fun getCityList(): LiveData<ArrayList<CityObj>> {
+    override fun getCityList(): LiveData<ArrayList<Movie>> {
         return liveCityList
     }
 
