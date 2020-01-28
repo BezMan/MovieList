@@ -1,7 +1,8 @@
-package bez.dev.movielistkotlin
+package bez.dev.movielistkotlin.view.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import bez.dev.movielistkotlin.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
