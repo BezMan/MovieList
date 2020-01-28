@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import bez.dev.movielistkotlin.R
 import bez.dev.movielistkotlin.model.Movie
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_detail.*
 
 class DetailActivity : AppCompatActivity() {
@@ -26,6 +27,8 @@ class DetailActivity : AppCompatActivity() {
         detailYear.text = movieObj.releaseYear.toString()
         detailGenre.text = movieObj.genre.toString()
         detailRating.text = movieObj.rating.toString()
+
+        Glide.with(this).load(movieObj.image).into(detailImage)
     }
 
 

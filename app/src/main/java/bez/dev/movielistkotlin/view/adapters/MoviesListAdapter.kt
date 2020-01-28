@@ -17,7 +17,6 @@ import kotlinx.android.synthetic.main.list_item_movie.view.*
 class MoviesListAdapter(private var context: Context, itemList: ArrayList<Movie>) :
     RecyclerView.Adapter<MoviesListAdapter.ViewHolder>() {
     private var filteredList: ArrayList<Movie> = itemList
-    private var fullList: ArrayList<Movie> = itemList
 
     companion object {
         var mClickListener: ItemClickListener? = null
@@ -28,22 +27,6 @@ class MoviesListAdapter(private var context: Context, itemList: ArrayList<Movie>
         return ViewHolder(view)
     }
 
-    fun filter(query: String) {
-        if (query == "") {
-            filteredList = ArrayList(fullList)
-        } else {
-            filteredList.clear()
-            var search = query
-            search = search.toLowerCase()
-            for (item in fullList) {
-                val movieTitle = item.title.toLowerCase()
-                if (movieTitle.contains(search)) {
-                    filteredList.add(item)
-                }
-            }
-        }
-        notifyDataSetChanged()
-    }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
