@@ -8,7 +8,7 @@
 
     <Toolbar
         android:id="@+id/actionBarChoose"
-        style="@style/toolbarMain"
+        style="@style/ToolbarCustom"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize" />
 
