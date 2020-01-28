@@ -6,12 +6,5 @@
         android:id="@+id/icSearch"
         android:icon="@drawable/icon_search"
         android:title="Search"
-        app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
-
-    <!--    <item-->
-    <!--        android:id="@+id/icUnit"-->
-    <!--        android:title="°C"-->
-    <!--        app:showAsAction="ifRoom" />-->
-
 </menu>
