@@ -14,8 +14,8 @@ import bez.dev.movielistkotlin.model.Movie
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.list_item_movie.view.*
 
-class CityListAdapter(private var context: Context, itemList: ArrayList<Movie>) :
-    RecyclerView.Adapter<CityListAdapter.ViewHolder>() {
+class MoviesListAdapter(private var context: Context, itemList: ArrayList<Movie>) :
+    RecyclerView.Adapter<MoviesListAdapter.ViewHolder>() {
     private var filteredList: ArrayList<Movie> = itemList
     private var fullList: ArrayList<Movie> = itemList
 

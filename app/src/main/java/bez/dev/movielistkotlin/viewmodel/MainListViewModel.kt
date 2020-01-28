@@ -7,11 +7,11 @@ import bez.dev.movielistkotlin.model.Movie
 
 class MainListViewModel(private val mRemoteDataSource: IMainListDataApi) : ViewModel() {
 
-    fun getWeatherByCity(cityName: String, unit: String?): MutableLiveData<ArrayList<Movie>> {
-        return mRemoteDataSource.getWeatherByCity(cityName, unit)
+    fun fetchMoviesData(): MutableLiveData<ArrayList<Movie>> {
+        return mRemoteDataSource.fetchMoviesData()
     }
 
-    val observedCityList = mRemoteDataSource.getCityList()
+    val observedMoviesList = mRemoteDataSource.getMoviesList()
 
 
 }

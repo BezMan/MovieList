@@ -12,32 +12,29 @@ import java.io.IOException
 
 class WeatherNetwork : IMainListDataApi {
 
-    private val URL_BASE = "http://api.openweathermap.org/"
-    private val VERSION = "data/2.5/"
-    private val API_ID = "&appid=a6fb62a4df6500bb3078d7e190bd637e"
+    private val URL_BASE = "https://api.androidhive.info/"
+    private val FORMAT = "json/"
+    private val FILE = "movies.json"
 
-    var cityList = ArrayList<Movie>()
-    var liveCityList = MutableLiveData<ArrayList<Movie>>()
+    var movieList = ArrayList<Movie>()
+    var liveMovieList = MutableLiveData<ArrayList<Movie>>()
 
 
-    override fun getWeatherByCity(
-        cityName: String,
-        unit: String?
-    ): MutableLiveData<ArrayList<Movie>> {
-        val method = "weather?q=$cityName"
-        val url = "$URL_BASE$VERSION$method$API_ID$unit"
+    override fun fetchMoviesData(): MutableLiveData<ArrayList<Movie>> {
+        val url = "$URL_BASE$FORMAT$FILE"
 
-        cityList.clear()
-        liveCityList.value = cityList
-        weatherHttpRequest(url, weatherDataCallback())
+        movieList.clear()
+        liveMovieList.value = movieList
+        moviesHttpRequest(url, dataCallback())
 
-        return liveCityList
+        return liveMovieList
     }
 
 
-    private fun weatherDataCallback(): HttpResponse {
+    private fun dataCallback(): HttpResponse {
         return object : HttpResponse {
             override fun httpResponseSuccess(response: String) {
+                Log.d("responseresponse", "" + response)
                 val cityData = Gson().fromJson(response, Movie::class.java)
 //                if (cityData.name.isNotEmpty()) {
 //                    val cityObj = CityObj(cityData.name
@@ -48,16 +45,16 @@ class WeatherNetwork : IMainListDataApi {
 
 
 //                    cityList.add(cityObj)
-                cityList.add(cityData)
-                liveCityList.postValue(cityList)
+                movieList.add(cityData)
+                liveMovieList.postValue(movieList)
 
 
             }
         }
     }
 
-    override fun getCityList(): LiveData<ArrayList<Movie>> {
-        return liveCityList
+    override fun getMoviesList(): LiveData<ArrayList<Movie>> {
+        return liveMovieList
     }
 
 
@@ -66,7 +63,7 @@ class WeatherNetwork : IMainListDataApi {
     }
 
 
-    private fun weatherHttpRequest(url: String, httpResponse: HttpResponse) {
+    private fun moviesHttpRequest(url: String, httpResponse: HttpResponse) {
         Log.d("URL_REQUEST", url)
         val client = OkHttpClient()
         val request = okhttp3.Request.Builder().url(url).build()
