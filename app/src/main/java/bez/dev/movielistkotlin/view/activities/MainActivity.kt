@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
     private fun callbackNetwork(listData: MutableList<Movie>) {
         CoroutineScope(Dispatchers.Default).launch {
-            mViewModel.insert(listData)
+            mViewModel.insertListToDB(listData)
         }
 
     }
@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
 
     fun searchFilter(text: String) {
-        moviesListAdapter.filter(text)
+        moviesListAdapter.searchFilter(text)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -138,19 +138,6 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
             }
         })
     }
-
-
-//    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-//        return when (item?.itemId) {
-//            R.id.icUnit -> {
-//                storedWeatherUnit = if (storedWeatherUnit == CELSIUS) FAHRENHEIT else CELSIUS
-//                SharedPrefs.saveStringData(SharedPrefs.UNIT_KEY, storedWeatherUnit)
-//                recreate()
-//                true
-//            }
-//            else -> super.onOptionsItemSelected(item)
-//        }
-//    }
 
 
     companion object {

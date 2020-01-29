@@ -59,7 +59,7 @@ class MoviesListAdapter(private var context: ItemClickListener, itemList: Mutabl
     }
 
 
-    fun filter(query: String) {
+    fun searchFilter(query: String) {
         if (query == "") {
             filteredList = ArrayList(fullList)
         } else {

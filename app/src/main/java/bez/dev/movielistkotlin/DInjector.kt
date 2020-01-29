@@ -9,15 +9,15 @@ object DInjector {
 
     fun getViewModel(): MainListViewModel {
 
-        return MainListViewModel(getSourceRepository(), getSourceNetwork())
+        return MainListViewModel(injectRepository(), injectNetwork())
     }
 
 
-    private fun getSourceNetwork(): IDataSource {
+    private fun injectNetwork(): IDataSource {
         return MovieNetwork()
     }
 
-    private fun getSourceRepository(): IDataSource {
+    private fun injectRepository(): IDataSource {
         return MovieRepository()
     }
 

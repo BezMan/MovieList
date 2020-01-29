@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import bez.dev.movielistkotlin.App
 import bez.dev.movielistkotlin.interfaces.IDataSource
 
-//const val KEY_FIRST_RUN = "KEY_FIRST_RUN"
 
 class MovieRepository : IDataSource {
 

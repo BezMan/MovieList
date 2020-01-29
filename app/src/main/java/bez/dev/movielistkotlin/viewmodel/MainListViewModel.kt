@@ -19,7 +19,7 @@ class MainListViewModel(
         return sourceNetwork.fetchMoviesData()
     }
 
-    suspend fun insert(listMovieObjects: MutableList<Movie>): List<Long> {
+    suspend fun insertListToDB(listMovieObjects: MutableList<Movie>): List<Long> {
         val movieRepository = sourceRepository as MovieRepository
         return movieRepository.insert(listMovieObjects)
     }

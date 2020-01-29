@@ -12,27 +12,23 @@ import retrofit2.http.GET
 
 class MovieNetwork : IDataSource {
 
-    private val URL_BASE = "https://api.androidhive.info/"
+    private val baseUrl = "https://api.androidhive.info/"
 
     var liveMovieList = MutableLiveData<MutableList<Movie>>()
 
 
     override fun fetchMoviesData(): LiveData<MutableList<Movie>> {
-        moviesHttpRequest()
-
+        moviesRequest()
         return liveMovieList
     }
 
 
-    private fun moviesHttpRequest() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(URL_BASE)
+    private fun moviesRequest() {
+        val retrofit = Retrofit.Builder().baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-
-        val service = retrofit.create(RequestInterface::class.java)
-        val call = service.getJSON()
+        val call = retrofit.create(RequestInterface::class.java).fetchJsonData()
 
         call?.enqueue(object : Callback<ArrayList<Movie>> {
             override fun onResponse(
@@ -42,16 +38,14 @@ class MovieNetwork : IDataSource {
                 liveMovieList.postValue(response.body())
             }
 
-            override fun onFailure(call: Call<ArrayList<Movie>>, t: Throwable) {
-//                weatherData!!.text = t.message
-            }
+            override fun onFailure(call: Call<ArrayList<Movie>>, t: Throwable) {}
         })
     }
 
 
     interface RequestInterface {
         @GET("json/movies.json")
-        fun getJSON(): Call<ArrayList<Movie>>?
+        fun fetchJsonData(): Call<ArrayList<Movie>>?
     }
 
 
