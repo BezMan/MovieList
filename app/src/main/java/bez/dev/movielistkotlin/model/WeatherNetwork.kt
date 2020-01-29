@@ -2,7 +2,7 @@ package bez.dev.movielistkotlin.model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import bez.dev.movielistkotlin.interfaces.IMainListDataApi
+import bez.dev.movielistkotlin.interfaces.IDataSource
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -10,23 +10,19 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
-class WeatherNetwork : IMainListDataApi {
+class WeatherNetwork : IDataSource {
 
     private val URL_BASE = "https://api.androidhive.info/"
 
-    var liveMovieList = MutableLiveData<ArrayList<Movie>>()
+    var liveMovieList = MutableLiveData<MutableList<Movie>>()
 
 
-    override fun fetchMoviesData(): MutableLiveData<ArrayList<Movie>> {
+    override fun fetchMoviesData(): LiveData<MutableList<Movie>> {
         moviesHttpRequest()
 
         return liveMovieList
     }
 
-
-    override fun getMoviesList(): LiveData<ArrayList<Movie>> {
-        return liveMovieList
-    }
 
     private fun moviesHttpRequest() {
         val retrofit = Retrofit.Builder()

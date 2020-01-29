@@ -8,6 +8,6 @@ import androidx.room.Query
 interface MovieDao {
 
     @Query("SELECT * FROM movie_table ORDER BY releaseYear DESC")
-    fun getAllMoviesByYear(): LiveData<List<Movie>>
+    fun getAllMoviesByYear(): LiveData<MutableList<Movie>>
 }
 

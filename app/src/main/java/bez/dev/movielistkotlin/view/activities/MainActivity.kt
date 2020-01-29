@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
     private lateinit var mViewModel: MainListViewModel
 
-    private val dataObserver: Observer<ArrayList<Movie>> = Observer { list: ArrayList<Movie>? ->
+    private val dataObserver: Observer<MutableList<Movie>> = Observer { list: MutableList<Movie>? ->
         dataCallback(list)
     }
 
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     private fun initViewModel() {
         mViewModel = DInjector.getViewModel()
         mViewModel =
-            ViewModelProvider(this, MainListViewModelFactory(DInjector.getMainRepository())).get(
+            ViewModelProvider(this, MainListViewModelFactory(DInjector.getSourceNetwork())).get(
                 MainListViewModel::class.java
             )
     }
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
         mViewModel.observedMoviesList.observe(this, dataObserver)
     }
 
-    private fun dataCallback(data: ArrayList<Movie>?) {
+    private fun dataCallback(data: MutableList<Movie>?) {
         listMovieObjects.clear()
         listMovieObjects = ArrayList(data!!)
 
