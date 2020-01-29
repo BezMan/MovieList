@@ -9,16 +9,14 @@ import bez.dev.movielistkotlin.model.MovieRepository
 class MainListViewModel(
     private val sourceRepository: IDataSource,
     private val sourceNetwork: IDataSource
-) :
-    ViewModel() {
+) : ViewModel() {
 
-    val observedMoviesList = fetchMoviesData()
-
-
-    fun fetchMoviesData(): LiveData<MutableList<Movie>> {
-        //Todo
+    fun fetchMoviesDB(): LiveData<MutableList<Movie>> {
         return sourceRepository.fetchMoviesData()
-//        return sourceNetwork.fetchMoviesData()
+    }
+
+    fun fetchMoviesNetwork(): LiveData<MutableList<Movie>> {
+        return sourceNetwork.fetchMoviesData()
     }
 
     suspend fun insert(listMovieObjects: MutableList<Movie>): List<Long> {

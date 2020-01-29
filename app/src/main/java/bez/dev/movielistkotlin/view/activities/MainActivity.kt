@@ -11,6 +11,9 @@ import bez.dev.movielistkotlin.model.Movie
 import bez.dev.movielistkotlin.view.adapters.MoviesListAdapter
 import bez.dev.movielistkotlin.viewmodel.MainListViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
@@ -19,9 +22,15 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
     private lateinit var mViewModel: MainListViewModel
 
-    private val dataObserver: Observer<MutableList<Movie>> = Observer { list: MutableList<Movie> ->
-        dataCallback(list)
+    private val databaseObserver: Observer<MutableList<Movie>> =
+        Observer { list: MutableList<Movie> ->
+            callbackDB(list)
     }
+
+    private val networkObserver: Observer<MutableList<Movie>> =
+        Observer { list: MutableList<Movie> ->
+            callbackNetwork(list)
+        }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,30 +56,38 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
         mViewModel = DInjector.getViewModel()
     }
 
+
     private fun setObservers() {
-        mViewModel.observedMoviesList.observe(this, dataObserver)
+        mViewModel.fetchMoviesDB().observe(this, databaseObserver)
     }
 
-    private fun dataCallback(data: MutableList<Movie>) {
-        listMovieObjects.clear()
-        listMovieObjects = data
 
-        //Todo
-//        CoroutineScope(Dispatchers.Default).launch {
-//            mViewModel.insert(listMovieObjects)
-//        }
+    private fun callbackNetwork(listData: MutableList<Movie>) {
+        CoroutineScope(Dispatchers.Default).launch {
+            mViewModel.insert(listData)
+        }
 
-
-        moviesListAdapter = MoviesListAdapter(this, listMovieObjects)
-        moviesListAdapter.setClickListener(this)
-        recyclerViewMain?.adapter = moviesListAdapter
-
-        moviesListAdapter.notifyDataSetChanged()
     }
 
+
+    private fun callbackDB(listData: MutableList<Movie>) {
+
+        if (listData.isNullOrEmpty()) {
+            mViewModel.fetchMoviesNetwork().observe(this, networkObserver)
+        } else {
+            listMovieObjects.clear()
+            listMovieObjects = listData
+
+            moviesListAdapter = MoviesListAdapter(this, listMovieObjects)
+            moviesListAdapter.setClickListener(this)
+            recyclerViewMain?.adapter = moviesListAdapter
+
+            moviesListAdapter.notifyDataSetChanged()
+        }
+    }
 
     private fun fetchAllCitiesData() {
-        mViewModel.fetchMoviesData()
+        mViewModel.fetchMoviesDB()
     }
 
 
