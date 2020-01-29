@@ -49,7 +49,6 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
         configureRecyclerView()
         initViewModel()
-        setObservers()
 
         fetchAllCitiesData()
 
@@ -58,11 +57,6 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
     private fun initViewModel() {
         mViewModel = DInjector.getViewModel()
-    }
-
-
-    private fun setObservers() {
-        mViewModel.fetchMoviesDB().observe(this, databaseObserver)
     }
 
 
@@ -77,7 +71,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     private fun callbackDB(listData: MutableList<Movie>) {
 
         if (listData.isNullOrEmpty()) {
-            mViewModel.fetchMoviesNetwork().observe(this, networkObserver)
+            fetchFromNetwork()
         } else {
             listMovieObjects.clear()
             listMovieObjects = listData
@@ -89,8 +83,14 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
         }
     }
 
+
+    private fun fetchFromNetwork() {
+        mViewModel.fetchMoviesNetwork().observe(this, networkObserver)
+    }
+
+
     private fun fetchAllCitiesData() {
-        mViewModel.fetchMoviesDB()
+        mViewModel.fetchMoviesDB().observe(this, databaseObserver)
     }
 
 

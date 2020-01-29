@@ -79,7 +79,7 @@ class MoviesListAdapter(private var context: ItemClickListener, itemList: Mutabl
 
     // parent activity will implement this method to respond to click events
     interface ItemClickListener {
-        fun onItemClick(position: Movie)
+        fun onItemClick(movie: Movie)
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
