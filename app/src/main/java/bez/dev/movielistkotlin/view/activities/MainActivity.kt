@@ -47,7 +47,8 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
         listMovieObjects = ArrayList()
 
-        configureRecyclerView()
+        initRecyclerView()
+        initSwipe()
         initViewModel()
 
         fetchAllCitiesData()
@@ -78,7 +79,6 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
             moviesListAdapter = MoviesListAdapter(this, listMovieObjects)
             recyclerViewMain?.adapter = moviesListAdapter
-
             moviesListAdapter.notifyDataSetChanged()
         }
     }
@@ -94,11 +94,20 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     }
 
 
-    private fun configureRecyclerView() {
+    private fun initRecyclerView() {
         recyclerViewMain?.layoutManager = LinearLayoutManager(this)
         recyclerViewMain?.setHasFixedSize(true)
     }
 
+    private fun initSwipe() {
+        mPullToRefreshView.setOnRefreshListener {
+            fetchFromNetwork()
+            mPullToRefreshView.postDelayed(
+                { mPullToRefreshView.setRefreshing(false) },
+                1000
+            )
+        }
+    }
 
     override fun onItemClick(movie: Movie) {
         val intent = Intent(this, DetailActivity::class.java)
