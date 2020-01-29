@@ -10,7 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
-class WeatherNetwork : IDataSource {
+class MovieNetwork : IDataSource {
 
     private val URL_BASE = "https://api.androidhive.info/"
 

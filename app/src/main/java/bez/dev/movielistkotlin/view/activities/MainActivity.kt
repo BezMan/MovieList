@@ -4,14 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import bez.dev.movielistkotlin.DInjector
 import bez.dev.movielistkotlin.R
 import bez.dev.movielistkotlin.model.Movie
 import bez.dev.movielistkotlin.view.adapters.MoviesListAdapter
 import bez.dev.movielistkotlin.viewmodel.MainListViewModel
-import bez.dev.movielistkotlin.viewmodel.MainListViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
@@ -47,10 +45,6 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
     private fun initViewModel() {
         mViewModel = DInjector.getViewModel()
-        mViewModel =
-            ViewModelProvider(this, MainListViewModelFactory(DInjector.getSourceNetwork())).get(
-                MainListViewModel::class.java
-            )
     }
 
     private fun setObservers() {

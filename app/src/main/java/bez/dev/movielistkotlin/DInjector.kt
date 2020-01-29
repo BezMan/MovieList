@@ -1,24 +1,24 @@
 package bez.dev.movielistkotlin
 
 import bez.dev.movielistkotlin.interfaces.IDataSource
-import bez.dev.movielistkotlin.model.NoteRepository
-import bez.dev.movielistkotlin.model.WeatherNetwork
+import bez.dev.movielistkotlin.model.MovieDB
+import bez.dev.movielistkotlin.model.MovieNetwork
 import bez.dev.movielistkotlin.viewmodel.MainListViewModel
 
 object DInjector {
 
     fun getViewModel(): MainListViewModel {
-//        return MainListViewModel(getSourceDB())
-        return MainListViewModel(getSourceNetwork())
+
+        return MainListViewModel(getSourceDB(), getSourceNetwork())
     }
 
 
-    fun getSourceNetwork(): IDataSource {
-        return WeatherNetwork()
+    private fun getSourceNetwork(): IDataSource {
+        return MovieNetwork()
     }
 
-    fun getSourceDB(): IDataSource {
-        return NoteRepository()
+    private fun getSourceDB(): IDataSource {
+        return MovieDB()
     }
 
 }
