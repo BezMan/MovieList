@@ -12,6 +12,7 @@ class MainListViewModel(private val sourceDB: IDataSource, private val sourceNet
 
 
     fun fetchMoviesData(): LiveData<MutableList<Movie>> {
+//        return sourceDB.fetchMoviesData()
         return sourceNetwork.fetchMoviesData()
     }
 
