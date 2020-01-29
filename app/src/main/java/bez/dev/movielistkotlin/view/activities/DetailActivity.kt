@@ -34,8 +34,8 @@ class DetailActivity : AppCompatActivity() {
 
     private fun initToolbar() {
         actionBarWeather?.setTitle(R.string.app_name)
-        setActionBar(actionBarWeather)
-        val actionBar = actionBar
+        setSupportActionBar(actionBarWeather)
+        val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
     }
 

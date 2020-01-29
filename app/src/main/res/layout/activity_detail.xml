@@ -5,7 +5,7 @@
     android:background="@android:color/black"
     android:orientation="vertical">
 
-    <Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/actionBarWeather"
         style="@style/ToolbarCustom"
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
         android:layout_margin="10dp"
         android:text="title"
         android:textColor="@android:color/white"
-        android:textSize="30sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/detailYear"
@@ -32,7 +32,7 @@
         android:layout_margin="10dp"
         android:text="year"
         android:textColor="@android:color/white"
-        android:textSize="30sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/detailRating"
@@ -41,7 +41,7 @@
         android:layout_margin="10dp"
         android:text="rating"
         android:textColor="@android:color/white"
-        android:textSize="30sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/detailGenre"
@@ -50,7 +50,7 @@
         android:layout_margin="10dp"
         android:text="genre"
         android:textColor="@android:color/white"
-        android:textSize="30sp" />
+        android:textSize="20sp" />
 
 
 </LinearLayout>

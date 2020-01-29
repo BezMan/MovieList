@@ -14,16 +14,21 @@ import bez.dev.movielistkotlin.model.Movie
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.list_item_movie.view.*
 
-class MoviesListAdapter(private var context: Context, itemList: MutableList<Movie>) :
+class MoviesListAdapter(private var context: ItemClickListener, itemList: MutableList<Movie>) :
     RecyclerView.Adapter<MoviesListAdapter.ViewHolder>() {
-    private var filteredList: MutableList<Movie> = itemList
 
-    companion object {
-        var mClickListener: ItemClickListener? = null
+    private var filteredList: MutableList<Movie> = itemList
+    private var fullList: MutableList<Movie> = itemList
+
+    private lateinit var mClickListener: ItemClickListener
+
+    init {
+        setOnItemClickListener(context)
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.list_item_movie, p0, false)
+        val view =
+            LayoutInflater.from(context as Context).inflate(R.layout.list_item_movie, p0, false)
         return ViewHolder(view)
     }
 
@@ -34,7 +39,12 @@ class MoviesListAdapter(private var context: Context, itemList: MutableList<Movi
             viewHolder.tvTitle.text = filteredList[position].title
             viewHolder.tvReleaseYear.text = filteredList[position].releaseYear.toString()
 
-            Glide.with(context).load(filteredList[position].image).into(viewHolder.iconImg)
+            Glide.with(context as Context).load(filteredList[position].image)
+                .into(viewHolder.iconImg)
+            viewHolder.cardView.setOnClickListener {
+                mClickListener.onItemClick(filteredList[position])
+
+            }
         }
     }
 
@@ -44,29 +54,38 @@ class MoviesListAdapter(private var context: Context, itemList: MutableList<Movi
 
 
     // allows clicks events to be caught
-    fun setClickListener(itemClickListener: ItemClickListener) {
+    private fun setOnItemClickListener(itemClickListener: ItemClickListener) {
         mClickListener = itemClickListener
+    }
+
+
+    fun filter(query: String) {
+        if (query == "") {
+            filteredList = ArrayList(fullList)
+        } else {
+            filteredList.clear()
+            var search = query
+            search = search.toLowerCase()
+            for (item in fullList) {
+                val cityName = item.title.toLowerCase()
+                if (cityName.contains(search)) {
+                    filteredList.add(item)
+                }
+            }
+        }
+        notifyDataSetChanged()
     }
 
 
     // parent activity will implement this method to respond to click events
     interface ItemClickListener {
-        fun onItemClick(position: Int)
+        fun onItemClick(position: Movie)
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var tvTitle: TextView = view.tvTitle
         var tvReleaseYear: TextView = view.tvReleaseYear
         var iconImg: ImageView = view.iconImg
-        private var cardView: CardView = view.cardView
-
-        init {
-            cardView.setOnClickListener(this)
-        }
-
-        override fun onClick(v: View?) {
-            mClickListener?.onItemClick(adapterPosition)
-        }
-
+        var cardView: CardView = view.cardView
     }
 }

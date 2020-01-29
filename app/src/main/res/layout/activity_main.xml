@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context=".view.activities.MainActivity">
 
-    <Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/actionBarChoose"
         style="@style/ToolbarCustom"
         android:layout_width="match_parent"
@@ -15,5 +15,6 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMain"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:listitem="@layout/list_item_movie" />
 </LinearLayout>

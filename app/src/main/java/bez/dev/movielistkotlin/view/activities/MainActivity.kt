@@ -2,7 +2,10 @@ package bez.dev.movielistkotlin.view.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import bez.dev.movielistkotlin.DInjector
@@ -19,6 +22,8 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
     private lateinit var listMovieObjects: MutableList<Movie>
     private lateinit var moviesListAdapter: MoviesListAdapter
+
+    private lateinit var searchView: SearchView
 
     private lateinit var mViewModel: MainListViewModel
 
@@ -38,14 +43,13 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
         setContentView(R.layout.activity_main)
 
         actionBarChoose.setTitle(R.string.app_name)
-        setActionBar(actionBarChoose)
+        setSupportActionBar(actionBarChoose)
 
         listMovieObjects = ArrayList()
 
         configureRecyclerView()
         initViewModel()
         setObservers()
-
 
         fetchAllCitiesData()
 
@@ -79,7 +83,6 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
             listMovieObjects = listData
 
             moviesListAdapter = MoviesListAdapter(this, listMovieObjects)
-            moviesListAdapter.setClickListener(this)
             recyclerViewMain?.adapter = moviesListAdapter
 
             moviesListAdapter.notifyDataSetChanged()
@@ -97,12 +100,57 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     }
 
 
-    override fun onItemClick(position: Int) {
+    override fun onItemClick(movie: Movie) {
         val intent = Intent(this, DetailActivity::class.java)
-        val obj = listMovieObjects[position]
-        intent.putExtra(EXTRA_MOVIE, obj)
+        intent.putExtra(EXTRA_MOVIE, movie)
         startActivity(intent)
     }
+
+
+    fun searchFilter(text: String) {
+        moviesListAdapter.filter(text)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_choose, menu)
+
+        val itemSearch = menu?.findItem(R.id.icSearch)
+        initSearchView(itemSearch)
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun initSearchView(itemSearch: MenuItem?) {
+        searchView = itemSearch?.actionView as SearchView
+        searchView.queryHint = "Write city..."
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            //when the user presses enter
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            //when the text changes
+            override fun onQueryTextChange(newText: String?): Boolean {
+                searchFilter(newText!!)
+                return true
+            }
+        })
+    }
+
+
+//    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+//        return when (item?.itemId) {
+//            R.id.icUnit -> {
+//                storedWeatherUnit = if (storedWeatherUnit == CELSIUS) FAHRENHEIT else CELSIUS
+//                SharedPrefs.saveStringData(SharedPrefs.UNIT_KEY, storedWeatherUnit)
+//                recreate()
+//                true
+//            }
+//            else -> super.onOptionsItemSelected(item)
+//        }
+//    }
 
 
     companion object {
