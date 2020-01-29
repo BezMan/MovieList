@@ -14,12 +14,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
-    private lateinit var listMovieObjects: ArrayList<Movie>
+    private lateinit var listMovieObjects: MutableList<Movie>
     private lateinit var moviesListAdapter: MoviesListAdapter
 
     private lateinit var mViewModel: MainListViewModel
 
-    private val dataObserver: Observer<MutableList<Movie>> = Observer { list: MutableList<Movie>? ->
+    private val dataObserver: Observer<MutableList<Movie>> = Observer { list: MutableList<Movie> ->
         dataCallback(list)
     }
 
@@ -51,9 +51,15 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
         mViewModel.observedMoviesList.observe(this, dataObserver)
     }
 
-    private fun dataCallback(data: MutableList<Movie>?) {
+    private fun dataCallback(data: MutableList<Movie>) {
         listMovieObjects.clear()
-        listMovieObjects = ArrayList(data!!)
+        listMovieObjects = data
+
+        //Todo
+//        CoroutineScope(Dispatchers.Default).launch {
+//            mViewModel.insert(listMovieObjects)
+//        }
+
 
         moviesListAdapter = MoviesListAdapter(this, listMovieObjects)
         moviesListAdapter.setClickListener(this)
