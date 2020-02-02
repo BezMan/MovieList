@@ -30,8 +30,7 @@ abstract class MovieDatabase : RoomDatabase() {
             if (instance == null) {
                 instance = Room.databaseBuilder(
                     context.applicationContext,
-                    MovieDatabase::class.java, "movie_database"
-                )
+                    MovieDatabase::class.java, "movie_database")
                     .fallbackToDestructiveMigration()
                     .addCallback(roomCallback)
                     .build()

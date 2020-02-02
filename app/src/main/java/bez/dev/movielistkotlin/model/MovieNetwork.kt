@@ -31,10 +31,7 @@ class MovieNetwork : IDataSource {
         val call = retrofit.create(RequestInterface::class.java).fetchJsonData()
 
         call?.enqueue(object : Callback<ArrayList<Movie>> {
-            override fun onResponse(
-                call: Call<ArrayList<Movie>>,
-                response: Response<ArrayList<Movie>>
-            ) {
+            override fun onResponse(call: Call<ArrayList<Movie>>, response: Response<ArrayList<Movie>>) {
                 liveMovieList.postValue(response.body())
             }
 

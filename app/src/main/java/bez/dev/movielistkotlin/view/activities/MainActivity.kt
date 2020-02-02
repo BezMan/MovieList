@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
         CoroutineScope(Dispatchers.Default).launch {
             mViewModel.insertListToDB(listData)
         }
-
+        mPullToRefreshView.setRefreshing(false)
     }
 
 
@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
             fetchFromNetwork()
             mPullToRefreshView.postDelayed(
                 { mPullToRefreshView.setRefreshing(false) },
-                1000
+                2000
             )
         }
     }
