@@ -2,7 +2,6 @@ package bez.dev.movielistkotlin.model
 
 import androidx.lifecycle.LiveData
 import bez.dev.movielistkotlin.App
-import bez.dev.movielistkotlin.interfaces.IDataSource
 
 
 class MovieRepository : IDataSource {

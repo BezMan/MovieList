@@ -2,7 +2,7 @@ package bez.dev.movielistkotlin.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import bez.dev.movielistkotlin.interfaces.IDataSource
+import bez.dev.movielistkotlin.model.IDataSource
 import bez.dev.movielistkotlin.model.Movie
 import bez.dev.movielistkotlin.model.MovieRepository
 

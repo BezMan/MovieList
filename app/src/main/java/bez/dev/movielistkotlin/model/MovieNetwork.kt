@@ -2,7 +2,6 @@ package bez.dev.movielistkotlin.model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import bez.dev.movielistkotlin.interfaces.IDataSource
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
