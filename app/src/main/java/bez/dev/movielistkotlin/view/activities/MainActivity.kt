@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     }
 
 
-    private fun callbackNetwork(listData: ArrayList<Movie>) {
+    private fun callbackNetwork(listData: List<Movie>) {
         CoroutineScope(Dispatchers.Default).launch {
             mViewModel.insertListToDB(listData)
         }
@@ -71,13 +71,13 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     }
 
 
-    private fun callbackDB(listData: ArrayList<Movie>) {
+    private fun callbackDB(listData: List<Movie>) {
 
         if (listData.isNullOrEmpty()) {
             fetchFromNetwork()
         } else {
             listMovieObjects.clear()
-            listMovieObjects = listData
+            listMovieObjects = listData as ArrayList<Movie>
 
             moviesListAdapter = MoviesListAdapter(this, listMovieObjects)
             recyclerViewMain?.adapter = moviesListAdapter

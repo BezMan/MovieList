@@ -10,7 +10,7 @@ class MovieRepository : IDataSource {
     private val movieDao: MovieDao = movieDatabase.movieDao()
 
 
-    override fun fetchMoviesData(): Single<ArrayList<Movie>> {
+    override fun fetchMoviesData(): Single<List<Movie>> {
         return movieDao.getAllMoviesByYear()
     }
 
@@ -18,7 +18,7 @@ class MovieRepository : IDataSource {
         return movieDao.insert(movie)
     }
 
-    suspend fun insert(movieList: ArrayList<Movie>): List<Long> {
+    suspend fun insert(movieList: List<Movie>): List<Long> {
         return movieDao.insert(movieList)
     }
 

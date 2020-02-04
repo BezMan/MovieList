@@ -11,15 +11,15 @@ class MainListViewModel(
     private val sourceNetwork: IDataSource
 ) : ViewModel() {
 
-    fun fetchMoviesDB(): Single<ArrayList<Movie>> {
+    fun fetchMoviesDB(): Single<List<Movie>> {
         return sourceRepository.fetchMoviesData()
     }
 
-    fun fetchMoviesNetwork(): Single<ArrayList<Movie>> {
+    fun fetchMoviesNetwork(): Single<List<Movie>> {
         return sourceNetwork.fetchMoviesData()
     }
 
-    suspend fun insertListToDB(listMovieObjects: ArrayList<Movie>): List<Long> {
+    suspend fun insertListToDB(listMovieObjects: List<Movie>): List<Long> {
         val movieRepository = sourceRepository as MovieRepository
         return movieRepository.insert(listMovieObjects)
     }

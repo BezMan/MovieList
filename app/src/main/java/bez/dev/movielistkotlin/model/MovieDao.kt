@@ -10,7 +10,7 @@ interface MovieDao {
     suspend fun insert(movie: Movie): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(movieList: ArrayList<Movie>): List<Long>
+    suspend fun insert(movieList: List<Movie>): List<Long>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(movie: Movie)
@@ -22,6 +22,6 @@ interface MovieDao {
     fun deleteAllMovies()
 
     @Query("SELECT * FROM movie_table ORDER BY releaseYear DESC")
-    fun getAllMoviesByYear(): Single<ArrayList<Movie>>
+    fun getAllMoviesByYear(): Single<List<Movie>>
 }
 

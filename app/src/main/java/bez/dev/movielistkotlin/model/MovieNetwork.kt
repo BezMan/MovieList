@@ -18,18 +18,18 @@ class MovieNetwork : IDataSource {
 
     private val movieCall = retrofitMovieInstance.create(RequestInterface::class.java).fetchJsonData()
 
-    override fun fetchMoviesData(): Single<ArrayList<Movie>> {
+    override fun fetchMoviesData(): Single<List<Movie>> {
         return Single.create{ observer ->
 
-            movieCall?.enqueue(object : Callback<ArrayList<Movie>>{
-                override fun onResponse(call: Call<ArrayList<Movie>>, response: Response<ArrayList<Movie>>) {
+            movieCall?.enqueue(object : Callback<List<Movie>>{
+                override fun onResponse(call: Call<List<Movie>>, response: Response<List<Movie>>) {
                     val movieList = response.body()
                     if (movieList != null){
                         observer.onSuccess(movieList)
                     }
                 }
 
-                override fun onFailure(call: Call<ArrayList<Movie>>, t: Throwable) {
+                override fun onFailure(call: Call<List<Movie>>, t: Throwable) {
                     observer.onError(t)
                 }
 
@@ -40,7 +40,7 @@ class MovieNetwork : IDataSource {
 
     interface RequestInterface {
         @GET("json/movies.json")
-        fun fetchJsonData(): Call<ArrayList<Movie>>?
+        fun fetchJsonData(): Call<List<Movie>>?
     }
 
 
