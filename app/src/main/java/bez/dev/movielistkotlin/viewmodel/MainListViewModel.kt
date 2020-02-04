@@ -19,7 +19,7 @@ class MainListViewModel(
         return sourceNetwork.fetchMoviesData()
     }
 
-    suspend fun insertListToDB(listMovieObjects: List<Movie>): List<Long> {
+    fun insertListToDB(listMovieObjects: List<Movie>): List<Long> {
         val movieRepository = sourceRepository as MovieRepository
         return movieRepository.insert(listMovieObjects)
     }

@@ -17,9 +17,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
@@ -64,10 +61,9 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
 
     private fun callbackNetwork(listData: List<Movie>) {
-        CoroutineScope(Dispatchers.Default).launch {
-            mViewModel.insertListToDB(listData)
-        }
-        mPullToRefreshView.setRefreshing(false)
+        mViewModel.insertListToDB(listData)
+
+//        mPullToRefreshView.setRefreshing(false)
     }
 
 
@@ -88,7 +84,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
     private fun fetchFromNetwork() {
         val disposable = mViewModel.fetchMoviesNetwork()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io())
             .subscribe(
                 { movieList ->
