@@ -1,7 +1,7 @@
 package bez.dev.movielistkotlin.model
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import io.reactivex.Single
 
 @Dao
 interface MovieDao {
@@ -10,7 +10,7 @@ interface MovieDao {
     suspend fun insert(movie: Movie): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(movieList: MutableList<Movie>): List<Long>
+    suspend fun insert(movieList: ArrayList<Movie>): List<Long>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(movie: Movie)
@@ -22,6 +22,6 @@ interface MovieDao {
     fun deleteAllMovies()
 
     @Query("SELECT * FROM movie_table ORDER BY releaseYear DESC")
-    fun getAllMoviesByYear(): LiveData<MutableList<Movie>>
+    fun getAllMoviesByYear(): Single<ArrayList<Movie>>
 }
 

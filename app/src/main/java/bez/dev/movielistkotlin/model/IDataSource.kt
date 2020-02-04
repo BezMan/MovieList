@@ -1,8 +1,9 @@
 package bez.dev.movielistkotlin.model
 
-import androidx.lifecycle.LiveData
+import io.reactivex.Single
+import java.util.*
 
 interface IDataSource {
-    fun fetchMoviesData(): LiveData<MutableList<Movie>>
+    fun fetchMoviesData(): Single<ArrayList<Movie>>
 
 }

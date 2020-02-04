@@ -1,7 +1,7 @@
 package bez.dev.movielistkotlin.model
 
-import androidx.lifecycle.LiveData
 import bez.dev.movielistkotlin.App
+import io.reactivex.Single
 
 
 class MovieRepository : IDataSource {
@@ -10,7 +10,7 @@ class MovieRepository : IDataSource {
     private val movieDao: MovieDao = movieDatabase.movieDao()
 
 
-    override fun fetchMoviesData(): LiveData<MutableList<Movie>> {
+    override fun fetchMoviesData(): Single<ArrayList<Movie>> {
         return movieDao.getAllMoviesByYear()
     }
 
@@ -18,7 +18,7 @@ class MovieRepository : IDataSource {
         return movieDao.insert(movie)
     }
 
-    suspend fun insert(movieList: MutableList<Movie>): List<Long> {
+    suspend fun insert(movieList: ArrayList<Movie>): List<Long> {
         return movieDao.insert(movieList)
     }
 

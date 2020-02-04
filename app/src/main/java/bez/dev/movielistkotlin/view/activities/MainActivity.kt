@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import bez.dev.movielistkotlin.DInjector
 import bez.dev.movielistkotlin.R
@@ -24,7 +23,7 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
-    private lateinit var listMovieObjects: MutableList<Movie>
+    private lateinit var listMovieObjects: ArrayList<Movie>
     private lateinit var moviesListAdapter: MoviesListAdapter
 
     private lateinit var searchView: SearchView
@@ -32,11 +31,6 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     private lateinit var mViewModel: MainListViewModel
 
     private var bag = CompositeDisposable()
-
-    private val databaseObserver: Observer<MutableList<Movie>> =
-        Observer { list: MutableList<Movie> ->
-            callbackDB(list)
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,7 +63,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     }
 
 
-    private fun callbackNetwork(listData: MutableList<Movie>) {
+    private fun callbackNetwork(listData: ArrayList<Movie>) {
         CoroutineScope(Dispatchers.Default).launch {
             mViewModel.insertListToDB(listData)
         }
@@ -77,7 +71,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     }
 
 
-    private fun callbackDB(listData: MutableList<Movie>) {
+    private fun callbackDB(listData: ArrayList<Movie>) {
 
         if (listData.isNullOrEmpty()) {
             fetchFromNetwork()
@@ -98,7 +92,6 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
             .subscribeOn(Schedulers.io())
             .subscribe(
                 { movieList ->
-                    Toast.makeText(this, movieList.toString(), Toast.LENGTH_LONG).show()
                     callbackNetwork(movieList)
                 },
                 { error ->
@@ -110,7 +103,18 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
 
     private fun fetchAllCitiesData() {
-        mViewModel.fetchMoviesDB().observe(this, databaseObserver)
+        val disposable = mViewModel.fetchMoviesDB()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                { movieList ->
+                    callbackDB(movieList)
+                },
+                { error ->
+                    Toast.makeText(this, error.message, Toast.LENGTH_LONG).show()
+
+                })
+        bag.add(disposable)
     }
 
 
