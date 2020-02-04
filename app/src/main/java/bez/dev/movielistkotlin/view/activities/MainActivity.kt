@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
@@ -13,6 +14,9 @@ import bez.dev.movielistkotlin.R
 import bez.dev.movielistkotlin.model.Movie
 import bez.dev.movielistkotlin.view.adapters.MoviesListAdapter
 import bez.dev.movielistkotlin.viewmodel.MainListViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,15 +31,12 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
     private lateinit var mViewModel: MainListViewModel
 
+    private var bag = CompositeDisposable()
+
     private val databaseObserver: Observer<MutableList<Movie>> =
         Observer { list: MutableList<Movie> ->
             callbackDB(list)
     }
-
-    private val networkObserver: Observer<MutableList<Movie>> =
-        Observer { list: MutableList<Movie> ->
-            callbackNetwork(list)
-        }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +55,13 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
         fetchAllCitiesData()
 
     }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        bag.clear()
+    }
+
 
 
     private fun initViewModel() {
@@ -85,7 +93,19 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
 
     private fun fetchFromNetwork() {
-        mViewModel.fetchMoviesNetwork().observe(this, networkObserver)
+        val disposable = mViewModel.fetchMoviesNetwork()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                { movieList ->
+                    Toast.makeText(this, movieList.toString(), Toast.LENGTH_LONG).show()
+                    callbackNetwork(movieList)
+                },
+                { error ->
+                    Toast.makeText(this, error.message, Toast.LENGTH_LONG).show()
+
+                })
+        bag.add(disposable)
     }
 
 
