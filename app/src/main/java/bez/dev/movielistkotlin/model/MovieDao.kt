@@ -7,10 +7,10 @@ import io.reactivex.Single
 interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(movie: Movie): Long
+    fun insert(movie: Movie): Single<Long>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(movieList: List<Movie>): List<Long>
+    fun insert(movieList: List<Movie>): Single<List<Long>>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(movie: Movie)

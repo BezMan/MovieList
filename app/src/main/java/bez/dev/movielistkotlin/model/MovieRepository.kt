@@ -14,11 +14,11 @@ class MovieRepository : IDataSource {
         return movieDao.getAllMoviesByYear()
     }
 
-    fun insert(movie: Movie): Long {
+    fun insert(movie: Movie): Single<Long> {
         return movieDao.insert(movie)
     }
 
-    fun insert(movieList: List<Movie>): List<Long> {
+    fun insert(movieList: List<Movie>): Single<List<Long>> {
         return movieDao.insert(movieList)
     }
 

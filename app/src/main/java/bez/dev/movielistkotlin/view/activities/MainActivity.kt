@@ -2,9 +2,9 @@ package bez.dev.movielistkotlin.view.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -61,9 +61,19 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
 
     private fun callbackNetwork(listData: List<Movie>) {
-        mViewModel.insertListToDB(listData)
+        val disposable = mViewModel.insertListToDB(listData).
+            observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                {
+                    refreshList(listData)
+                    mPullToRefreshView.setRefreshing(false)
+                },
+                { error ->
+                    Log.e("callbackNetwork","$error")
 
-//        mPullToRefreshView.setRefreshing(false)
+                })
+        bag.add(disposable)
     }
 
 
@@ -72,13 +82,17 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
         if (listData.isNullOrEmpty()) {
             fetchFromNetwork()
         } else {
-            listMovieObjects.clear()
-            listMovieObjects = listData as ArrayList<Movie>
-
-            moviesListAdapter = MoviesListAdapter(this, listMovieObjects)
-            recyclerViewMain?.adapter = moviesListAdapter
-            moviesListAdapter.notifyDataSetChanged()
+            refreshList(listData)
         }
+    }
+
+    private fun refreshList(listData: List<Movie>) {
+        listMovieObjects.clear()
+        listMovieObjects = listData as ArrayList<Movie>
+
+        moviesListAdapter = MoviesListAdapter(this, listMovieObjects)
+        recyclerViewMain?.adapter = moviesListAdapter
+        moviesListAdapter.notifyDataSetChanged()
     }
 
 
@@ -91,7 +105,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
                     callbackNetwork(movieList)
                 },
                 { error ->
-                    Toast.makeText(this, error.message, Toast.LENGTH_LONG).show()
+                    Log.e("fetchFromNetwork","$error")
 
                 })
         bag.add(disposable)
@@ -107,7 +121,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
                     callbackDB(movieList)
                 },
                 { error ->
-                    Toast.makeText(this, error.message, Toast.LENGTH_LONG).show()
+                    Log.e("fetchAllCitiesData","$error")
 
                 })
         bag.add(disposable)
