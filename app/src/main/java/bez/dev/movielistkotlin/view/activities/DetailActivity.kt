@@ -19,6 +19,12 @@ class DetailActivity : AppCompatActivity() {
 
     }
 
+    //overriding ARROW btn, so we don't recreate MainActivity
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
 
     private fun populateViews() {
         val movieObj = intent.getParcelableExtra(MainActivity.EXTRA_MOVIE) as Movie
