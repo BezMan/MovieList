@@ -67,24 +67,12 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
             .subscribe(
                 {
                     refreshList(listData)
-                    mPullToRefreshView.setRefreshing(false)
                 },
-                { error ->
-                    Log.e("callbackNetwork","$error")
-
-                })
+                { error -> Log.e("callbackNetwork","$error") }
+            )
         bag.add(disposable)
     }
 
-
-    private fun callbackDB(listData: List<Movie>) {
-
-        if (listData.isNullOrEmpty()) {
-            fetchFromNetwork()
-        } else {
-            refreshList(listData)
-        }
-    }
 
     private fun refreshList(listData: List<Movie>) {
         listMovieObjects.clear()
@@ -93,6 +81,8 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
         moviesListAdapter = MoviesListAdapter(this, listMovieObjects)
         recyclerViewMain?.adapter = moviesListAdapter
         moviesListAdapter.notifyDataSetChanged()
+
+        mPullToRefreshView.setRefreshing(false)
     }
 
 
@@ -104,10 +94,8 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
                 { movieList ->
                     callbackNetwork(movieList)
                 },
-                { error ->
-                    Log.e("fetchFromNetwork","$error")
-
-                })
+                { error -> Log.e("fetchFromNetwork","$error") }
+            )
         bag.add(disposable)
     }
 
@@ -118,12 +106,14 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
             .subscribeOn(Schedulers.io())
             .subscribe(
                 { movieList ->
-                    callbackDB(movieList)
+                    if (movieList.isNullOrEmpty()) {
+                        fetchFromNetwork()
+                    } else {
+                        refreshList(movieList)
+                    }
                 },
-                { error ->
-                    Log.e("fetchAllCitiesData","$error")
-
-                })
+                { error -> Log.e("fetchAllCitiesData","$error") }
+            )
         bag.add(disposable)
     }
 
