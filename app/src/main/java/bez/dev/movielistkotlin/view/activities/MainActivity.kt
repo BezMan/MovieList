@@ -60,61 +60,62 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     }
 
 
-    private fun callbackNetwork(listData: List<Movie>) {
-        val disposable = mViewModel.insertListToDB(listData).
+//    private fun callbackNetwork(listData: List<Movie>) {
+//        val disposable = mViewModel.insertListToDB(listData).
+//            observeOn(AndroidSchedulers.mainThread())
+//            .subscribeOn(Schedulers.io())
+//            .subscribe(
+//                {
+//                    refreshList(listData)
+//                },
+//                { error -> Log.e("callbackNetwork","$error") }
+//            )
+//        bag.add(disposable)
+//    }
+
+
+    private fun refreshList(listData: List<Movie>) {
+
+        if (!listData.isNullOrEmpty()) {
+            listMovieObjects.clear()
+
+            listMovieObjects = listData as ArrayList<Movie>
+
+            moviesListAdapter = MoviesListAdapter(this, listMovieObjects)
+            recyclerViewMain?.adapter = moviesListAdapter
+            moviesListAdapter.notifyDataSetChanged()
+
+            mPullToRefreshView.setRefreshing(false)
+        }
+    }
+
+
+//    private fun fetchFromNetwork() {
+//        val disposable = mViewModel.fetchMoviesNetwork()
+//            .observeOn(Schedulers.io())
+//            .subscribeOn(Schedulers.io())
+//            .subscribe(
+//                { movieList ->
+//                    callbackNetwork(movieList)
+//                },
+//                { error -> Log.e("fetchFromNetwork","$error") }
+//            )
+//        bag.add(disposable)
+//    }
+
+
+    private fun fetchAllCitiesData() {
+        val disposable = mViewModel.fetchMovies().
             observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(
                 {
-                    refreshList(listData)
+                    refreshList(it)
                 },
                 { error -> Log.e("callbackNetwork","$error") }
             )
         bag.add(disposable)
-    }
 
-
-    private fun refreshList(listData: List<Movie>) {
-        listMovieObjects.clear()
-        listMovieObjects = listData as ArrayList<Movie>
-
-        moviesListAdapter = MoviesListAdapter(this, listMovieObjects)
-        recyclerViewMain?.adapter = moviesListAdapter
-        moviesListAdapter.notifyDataSetChanged()
-
-        mPullToRefreshView.setRefreshing(false)
-    }
-
-
-    private fun fetchFromNetwork() {
-        val disposable = mViewModel.fetchMoviesNetwork()
-            .observeOn(Schedulers.io())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                { movieList ->
-                    callbackNetwork(movieList)
-                },
-                { error -> Log.e("fetchFromNetwork","$error") }
-            )
-        bag.add(disposable)
-    }
-
-
-    private fun fetchAllCitiesData() {
-        val disposable = mViewModel.fetchMoviesDB()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                { movieList ->
-                    if (movieList.isNullOrEmpty()) {
-                        fetchFromNetwork()
-                    } else {
-                        refreshList(movieList)
-                    }
-                },
-                { error -> Log.e("fetchAllCitiesData","$error") }
-            )
-        bag.add(disposable)
     }
 
 
@@ -125,7 +126,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
     private fun initSwipe() {
         mPullToRefreshView.setOnRefreshListener {
-            fetchFromNetwork()
+//            fetchFromNetwork()
             mPullToRefreshView.postDelayed(
                 { mPullToRefreshView.setRefreshing(false) },
                 2000

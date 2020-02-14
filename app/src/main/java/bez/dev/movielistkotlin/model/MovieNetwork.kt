@@ -1,12 +1,12 @@
 package bez.dev.movielistkotlin.model
 
-import io.reactivex.Single
+import io.reactivex.Maybe
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
-class MovieNetwork : IDataSource {
+class MovieNetwork {
 
     private val moviesBaseUrl = "https://api.androidhive.info/"
 
@@ -18,14 +18,14 @@ class MovieNetwork : IDataSource {
     private val movieCall = retrofitMovieInstance.create(RequestInterface::class.java)
 
 
-    override fun fetchMoviesData(): Single<List<Movie>> {
+    fun fetchMoviesData(): Maybe<List<Movie>> {
         return movieCall.fetchJsonData()
     }
 
 
     interface RequestInterface {
         @GET("json/movies.json")
-        fun fetchJsonData(): Single<List<Movie>>
+        fun fetchJsonData(): Maybe<List<Movie>>
     }
 
 

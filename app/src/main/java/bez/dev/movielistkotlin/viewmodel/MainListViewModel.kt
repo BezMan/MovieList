@@ -1,27 +1,20 @@
 package bez.dev.movielistkotlin.viewmodel
 
 import androidx.lifecycle.ViewModel
-import bez.dev.movielistkotlin.model.IDataSource
 import bez.dev.movielistkotlin.model.Movie
 import bez.dev.movielistkotlin.model.MovieRepository
-import io.reactivex.Single
+import io.reactivex.Maybe
 
-class MainListViewModel(
-    private val sourceRepository: IDataSource,
-    private val sourceNetwork: IDataSource
-) : ViewModel() {
+class MainListViewModel: ViewModel() {
 
-    fun fetchMoviesDB(): Single<List<Movie>> {
-        return sourceRepository.fetchMoviesData()
+    private val movieRepository = MovieRepository()
+
+    fun fetchMovies(): Maybe<List<Movie>> {
+        return movieRepository.fetchMoviesData()
     }
 
-    fun fetchMoviesNetwork(): Single<List<Movie>> {
-        return sourceNetwork.fetchMoviesData()
-    }
-
-    fun insertListToDB(listMovieObjects: List<Movie>): Single<List<Long>> {
-        val movieRepository = sourceRepository as MovieRepository
-        return movieRepository.insert(listMovieObjects)
-    }
+//    fun insertListToDB(listMovieObjects: List<Movie>): Single<List<Long>> {
+//        return movieRepository.insertListToDB(listMovieObjects)
+//    }
 
 }

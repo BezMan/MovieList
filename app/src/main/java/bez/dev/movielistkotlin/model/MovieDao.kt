@@ -1,6 +1,7 @@
 package bez.dev.movielistkotlin.model
 
 import androidx.room.*
+import io.reactivex.Maybe
 import io.reactivex.Single
 
 @Dao
@@ -22,6 +23,6 @@ interface MovieDao {
     fun deleteAllMovies()
 
     @Query("SELECT * FROM movie_table ORDER BY releaseYear DESC")
-    fun getAllMoviesByYear(): Single<List<Movie>>
+    fun getAllMoviesByYear(): Maybe<List<Movie>>
 }
 
