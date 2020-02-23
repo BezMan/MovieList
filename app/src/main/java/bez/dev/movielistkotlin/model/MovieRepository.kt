@@ -1,47 +1,43 @@
 package bez.dev.movielistkotlin.model
 
 import bez.dev.movielistkotlin.App
-import io.reactivex.Flowable
+import bez.dev.movielistkotlin.Utils
+import io.reactivex.Maybe
 import io.reactivex.schedulers.Schedulers
 
 
-class MovieRepository{
+class MovieRepository {
 
     private val movieDatabase: MovieDatabase = App.database
     private val movieNetwork = MovieNetwork()
     private val movieDao: MovieDao = movieDatabase.movieDao()
 
 
-    fun fetchMoviesData(): Flowable<List<Movie>> {
+    fun fetchMoviesData(): Maybe<List<Movie>> {
         return movieDao.getAllMoviesByYear()
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io())
             .flatMap {
-                if (it.isEmpty())
+                if (Utils.isNetworkAvailable(App.appContext))
                     fetchFromNetwork()
                 else
-                    Flowable.just(it) //return DB data
+                    Maybe.just(it) //return DB data
             }
     }
 
-    private fun fetchFromNetwork(): Flowable<List<Movie>> {
-        return  movieNetwork.fetchMoviesData()
+    private fun fetchFromNetwork(): Maybe<List<Movie>> {
+        return movieNetwork.fetchMoviesData()
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io())
             .filter { it.isNotEmpty() }
             .flatMap {
                 insertListToDB(it)
-                Flowable.just(it)
+                Maybe.just(it)
             }
     }
 
 
-    fun refreshMoviesData(): Flowable<List<Movie>> {
-        return fetchFromNetwork()
-    }
-
-
-    private fun insertListToDB(movieList: List<Movie>){
+    private fun insertListToDB(movieList: List<Movie>) {
         return movieDao.insert(movieList)
     }
 

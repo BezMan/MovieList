@@ -1,7 +1,7 @@
 package bez.dev.movielistkotlin.model
 
 import androidx.room.*
-import io.reactivex.Flowable
+import io.reactivex.Maybe
 
 @Dao
 interface MovieDao {
@@ -22,6 +22,6 @@ interface MovieDao {
     fun deleteAllMovies()
 
     @Query("SELECT * FROM movie_table ORDER BY releaseYear DESC")
-    fun getAllMoviesByYear(): Flowable<List<Movie>>
+    fun getAllMoviesByYear(): Maybe<List<Movie>>
 }
 

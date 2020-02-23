@@ -91,20 +91,6 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     }
 
 
-    private fun forceRefreshMoviesData() {
-        val disposable = mViewModel.refreshMoviesData().
-            observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                {
-                    refreshList(it)
-                },
-                { error -> Log.e("callbackNetwork","$error") }
-            )
-        bag.add(disposable)
-
-    }
-
 
     private fun initRecyclerView() {
         recyclerViewMain?.layoutManager = LinearLayoutManager(this)
@@ -113,7 +99,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
     private fun initSwipe() {
         mPullToRefreshView.setOnRefreshListener {
-            forceRefreshMoviesData()
+            fetchMoviesData()
             mPullToRefreshView.postDelayed(
                 { mPullToRefreshView.setRefreshing(false) },
                 2000

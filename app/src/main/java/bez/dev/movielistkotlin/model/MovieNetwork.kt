@@ -1,6 +1,6 @@
 package bez.dev.movielistkotlin.model
 
-import io.reactivex.Flowable
+import io.reactivex.Maybe
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -18,14 +18,14 @@ class MovieNetwork {
     private val movieCall = retrofitMovieInstance.create(RequestInterface::class.java)
 
 
-    fun fetchMoviesData(): Flowable<List<Movie>> {
+    fun fetchMoviesData(): Maybe<List<Movie>> {
         return movieCall.fetchJsonData()
     }
 
 
     interface RequestInterface {
         @GET("json/movies.json")
-        fun fetchJsonData(): Flowable<List<Movie>>
+        fun fetchJsonData(): Maybe<List<Movie>>
     }
 
 
