@@ -1,17 +1,16 @@
 package bez.dev.movielistkotlin.model
 
 import androidx.room.*
-import io.reactivex.Maybe
-import io.reactivex.Single
+import io.reactivex.Flowable
 
 @Dao
 interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(movie: Movie): Single<Long>
+    fun insert(movie: Movie)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(movieList: List<Movie>): Single<List<Long>>
+    fun insert(movieList: List<Movie>)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(movie: Movie)
@@ -23,6 +22,6 @@ interface MovieDao {
     fun deleteAllMovies()
 
     @Query("SELECT * FROM movie_table ORDER BY releaseYear DESC")
-    fun getAllMoviesByYear(): Maybe<List<Movie>>
+    fun getAllMoviesByYear(): Flowable<List<Movie>>
 }
 

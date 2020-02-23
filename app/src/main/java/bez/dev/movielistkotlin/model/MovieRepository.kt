@@ -1,8 +1,7 @@
 package bez.dev.movielistkotlin.model
 
 import bez.dev.movielistkotlin.App
-import io.reactivex.Maybe
-import io.reactivex.Single
+import io.reactivex.Flowable
 import io.reactivex.schedulers.Schedulers
 
 
@@ -13,28 +12,38 @@ class MovieRepository{
     private val movieDao: MovieDao = movieDatabase.movieDao()
 
 
-    fun fetchMoviesData(): Maybe<List<Movie>> {
+    fun fetchMoviesData(): Flowable<List<Movie>> {
         return movieDao.getAllMoviesByYear()
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io())
-            .filter { list -> list.isEmpty() }
             .flatMap {
-                fetchFromNetwork()
+                if (it.isNotEmpty())
+                    Flowable.just(it)
+                else
+                    fetchFromNetwork()
             }
     }
 
-    private fun fetchFromNetwork(): Maybe<List<Movie>> {
+    private fun fetchFromNetwork(): Flowable<List<Movie>> {
         return  movieNetwork.fetchMoviesData()
+            .observeOn(Schedulers.io())
+            .subscribeOn(Schedulers.io())
+            .filter { it.isNotEmpty() }
+            .flatMap {
+                insertListToDB(it)
+                Flowable.just(it)
+            }
+    }
+
+    private fun insertListToDB(movieList: List<Movie>){
+        return movieDao.insert(movieList)
     }
 
 
-    fun insert(movie: Movie): Single<Long> {
+    fun insert(movie: Movie) {
         return movieDao.insert(movie)
     }
 
-    fun insertListToDB(movieList: List<Movie>): Single<List<Long>> {
-        return movieDao.insert(movieList)
-    }
 
 }
 

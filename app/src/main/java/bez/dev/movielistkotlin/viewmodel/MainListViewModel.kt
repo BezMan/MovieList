@@ -3,18 +3,15 @@ package bez.dev.movielistkotlin.viewmodel
 import androidx.lifecycle.ViewModel
 import bez.dev.movielistkotlin.model.Movie
 import bez.dev.movielistkotlin.model.MovieRepository
-import io.reactivex.Maybe
+import io.reactivex.Flowable
 
 class MainListViewModel: ViewModel() {
 
     private val movieRepository = MovieRepository()
 
-    fun fetchMovies(): Maybe<List<Movie>> {
+    fun fetchMovies(): Flowable<List<Movie>> {
         return movieRepository.fetchMoviesData()
     }
 
-//    fun insertListToDB(listMovieObjects: List<Movie>): Single<List<Long>> {
-//        return movieRepository.insertListToDB(listMovieObjects)
-//    }
 
 }

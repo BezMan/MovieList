@@ -60,20 +60,6 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     }
 
 
-//    private fun callbackNetwork(listData: List<Movie>) {
-//        val disposable = mViewModel.insertListToDB(listData).
-//            observeOn(AndroidSchedulers.mainThread())
-//            .subscribeOn(Schedulers.io())
-//            .subscribe(
-//                {
-//                    refreshList(listData)
-//                },
-//                { error -> Log.e("callbackNetwork","$error") }
-//            )
-//        bag.add(disposable)
-//    }
-
-
     private fun refreshList(listData: List<Movie>) {
 
         if (!listData.isNullOrEmpty()) {
@@ -88,20 +74,6 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
             mPullToRefreshView.setRefreshing(false)
         }
     }
-
-
-//    private fun fetchFromNetwork() {
-//        val disposable = mViewModel.fetchMoviesNetwork()
-//            .observeOn(Schedulers.io())
-//            .subscribeOn(Schedulers.io())
-//            .subscribe(
-//                { movieList ->
-//                    callbackNetwork(movieList)
-//                },
-//                { error -> Log.e("fetchFromNetwork","$error") }
-//            )
-//        bag.add(disposable)
-//    }
 
 
     private fun fetchAllCitiesData() {
