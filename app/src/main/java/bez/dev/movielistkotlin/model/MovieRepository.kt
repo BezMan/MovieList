@@ -17,10 +17,10 @@ class MovieRepository{
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io())
             .flatMap {
-                if (it.isNotEmpty())
-                    Flowable.just(it)
-                else
+                if (it.isEmpty())
                     fetchFromNetwork()
+                else
+                    Flowable.just(it) //return DB data
             }
     }
 
@@ -34,6 +34,12 @@ class MovieRepository{
                 Flowable.just(it)
             }
     }
+
+
+    fun refreshMoviesData(): Flowable<List<Movie>> {
+        return fetchFromNetwork()
+    }
+
 
     private fun insertListToDB(movieList: List<Movie>){
         return movieDao.insert(movieList)

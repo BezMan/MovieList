@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
         initSwipe()
         initViewModel()
 
-        fetchAllCitiesData()
+        fetchMoviesData()
 
     }
 
@@ -76,8 +76,23 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     }
 
 
-    private fun fetchAllCitiesData() {
+    private fun fetchMoviesData() {
         val disposable = mViewModel.fetchMovies().
+            observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                {
+                    refreshList(it)
+                },
+                { error -> Log.e("callbackNetwork","$error") }
+            )
+        bag.add(disposable)
+
+    }
+
+
+    private fun forceRefreshMoviesData() {
+        val disposable = mViewModel.refreshMoviesData().
             observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(
@@ -98,7 +113,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
     private fun initSwipe() {
         mPullToRefreshView.setOnRefreshListener {
-//            fetchFromNetwork()
+            forceRefreshMoviesData()
             mPullToRefreshView.postDelayed(
                 { mPullToRefreshView.setRefreshing(false) },
                 2000

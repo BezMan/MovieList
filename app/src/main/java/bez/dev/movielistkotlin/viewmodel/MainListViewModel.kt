@@ -13,5 +13,9 @@ class MainListViewModel: ViewModel() {
         return movieRepository.fetchMoviesData()
     }
 
+    fun refreshMoviesData(): Flowable<List<Movie>> {
+        return movieRepository.refreshMoviesData()
+    }
+
 
 }
