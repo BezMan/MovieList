@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
         listMovieObjects = ArrayList()
 
         initRecyclerView()
-        initSwipe()
+        setupSwipeRefresh()
         initViewModel()
 
         fetchMoviesData()
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
             recyclerViewMain?.adapter = moviesListAdapter
             moviesListAdapter.notifyDataSetChanged()
 
-            mPullToRefreshView.setRefreshing(false)
+            swipeRefreshLayout.isRefreshing = false
         }
     }
 
@@ -97,13 +97,9 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
         recyclerViewMain?.setHasFixedSize(true)
     }
 
-    private fun initSwipe() {
-        mPullToRefreshView.setOnRefreshListener {
+    private fun setupSwipeRefresh() {
+        swipeRefreshLayout.setOnRefreshListener {
             fetchMoviesData()
-            mPullToRefreshView.postDelayed(
-                { mPullToRefreshView.setRefreshing(false) },
-                2000
-            )
         }
     }
 
@@ -129,7 +125,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
     private fun initSearchView(itemSearch: MenuItem?) {
         searchView = itemSearch?.actionView as SearchView
-        searchView.queryHint = "Write city..."
+        searchView.queryHint = "Search movie..."
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 

@@ -12,10 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize" />
 
-    <com.yalantis.phoenix.PullToRefreshView
-        android:id="@+id/mPullToRefreshView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewMain"
@@ -23,6 +23,6 @@
             android:layout_height="match_parent"
             tools:listitem="@layout/list_item_movie" />
 
-    </com.yalantis.phoenix.PullToRefreshView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

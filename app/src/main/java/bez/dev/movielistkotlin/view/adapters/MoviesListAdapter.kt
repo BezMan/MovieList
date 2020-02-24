@@ -64,11 +64,8 @@ class MoviesListAdapter(private var context: ItemClickListener, itemList: ArrayL
             filteredList = ArrayList(fullList)
         } else {
             filteredList.clear()
-            var search = query
-            search = search.toLowerCase()
             for (item in fullList) {
-                val cityName = item.title.toLowerCase()
-                if (cityName.contains(search)) {
+                if (item.title.toLowerCase().contains(query.toLowerCase())) {
                     filteredList.add(item)
                 }
             }
