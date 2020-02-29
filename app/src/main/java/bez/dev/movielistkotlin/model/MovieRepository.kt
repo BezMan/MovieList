@@ -14,15 +14,16 @@ class MovieRepository {
 
 
     fun fetchMoviesData(): Maybe<List<Movie>> {
-        return movieDao.getAllMoviesByYear()
-            .observeOn(Schedulers.io())
-            .subscribeOn(Schedulers.io())
-            .flatMap {
-                if (Utils.isNetworkAvailable(App.appContext))
-                    fetchFromNetwork()
-                else
+        return if (Utils.isNetworkAvailable(App.appContext))
+            fetchFromNetwork()
+        else {
+            movieDao.getAllMoviesByYear()
+                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
+                .flatMap {
                     Maybe.just(it) //return DB data
-            }
+                }
+        }
     }
 
     private fun fetchFromNetwork(): Maybe<List<Movie>> {

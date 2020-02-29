@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -71,8 +72,11 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
             recyclerViewMain?.adapter = moviesListAdapter
             moviesListAdapter.notifyDataSetChanged()
 
-            swipeRefreshLayout.isRefreshing = false
         }
+        else{
+            network_error_message.visibility = View.VISIBLE
+        }
+        swipeRefreshLayout.isRefreshing = false
     }
 
 
@@ -95,6 +99,9 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     private fun initRecyclerView() {
         recyclerViewMain?.layoutManager = LinearLayoutManager(this)
         recyclerViewMain?.setHasFixedSize(true)
+
+        moviesListAdapter = MoviesListAdapter(this, listMovieObjects)
+        recyclerViewMain?.adapter = moviesListAdapter
     }
 
     private fun setupSwipeRefresh() {
