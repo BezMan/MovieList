@@ -8,23 +8,28 @@ import io.reactivex.schedulers.Schedulers
 
 class MovieRepository {
 
-    private val movieDatabase: MovieDatabase = App.database
     private val movieNetwork = MovieNetwork()
-    private val movieDao: MovieDao = movieDatabase.movieDao()
+    private val movieDao: MovieDao = App.database.movieDao()
 
 
     fun fetchMoviesData(): Maybe<List<Movie>> {
         return if (Utils.isNetworkAvailable(App.appContext))
             fetchFromNetwork()
         else {
-            movieDao.getAllMoviesByYear()
-                .observeOn(Schedulers.io())
-                .subscribeOn(Schedulers.io())
-                .flatMap {
-                    Maybe.just(it) //return DB data
-                }
+            fetchFromDatabase()
         }
     }
+
+
+    private fun fetchFromDatabase(): Maybe<List<Movie>> {
+        return movieDao.getAllMoviesByYear()
+            .observeOn(Schedulers.io())
+            .subscribeOn(Schedulers.io())
+            .flatMap {
+                Maybe.just(it) //return DB data
+            }
+    }
+
 
     private fun fetchFromNetwork(): Maybe<List<Movie>> {
         return movieNetwork.fetchMoviesData()

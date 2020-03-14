@@ -34,7 +34,10 @@ class DetailActivity : AppCompatActivity() {
         detailGenre.text = movieObj.genre.toString()
         detailRating.text = movieObj.rating.toString()
 
-        Glide.with(this).load(movieObj.image).into(detailImage)
+        val imageUrl = movieObj.image
+        if (imageUrl.isNotEmpty()) {
+            Glide.with(this).load(imageUrl).into(detailImage)
+        }
     }
 
 

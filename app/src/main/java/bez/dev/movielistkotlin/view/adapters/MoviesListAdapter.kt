@@ -39,8 +39,10 @@ class MoviesListAdapter(private var context: ItemClickListener, itemList: ArrayL
             viewHolder.tvTitle.text = filteredList[position].title
             viewHolder.tvReleaseYear.text = filteredList[position].releaseYear.toString()
 
-            Glide.with(context as Context).load(filteredList[position].image)
-                .into(viewHolder.iconImg)
+            val imageUrl = filteredList[position].image
+            if(imageUrl.isNotEmpty()) {
+                Glide.with(context as Context).load(imageUrl).into(viewHolder.iconImg)
+            }
             viewHolder.cardView.setOnClickListener {
                 mClickListener.onItemClick(filteredList[position])
 

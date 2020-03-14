@@ -9,7 +9,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
-import bez.dev.movielistkotlin.DInjector
 import bez.dev.movielistkotlin.R
 import bez.dev.movielistkotlin.model.Movie
 import bez.dev.movielistkotlin.view.adapters.MoviesListAdapter
@@ -26,7 +25,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
     private lateinit var searchView: SearchView
 
-    private lateinit var mViewModel: MainListViewModel
+    private val mViewModel: MainListViewModel =  MainListViewModel()
 
     private var bag = CompositeDisposable()
 
@@ -42,7 +41,6 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
         initRecyclerView()
         setupSwipeRefresh()
-        initViewModel()
 
         fetchMoviesData()
 
@@ -52,12 +50,6 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     override fun onDestroy() {
         super.onDestroy()
         bag.clear()
-    }
-
-
-
-    private fun initViewModel() {
-        mViewModel = DInjector.getViewModel()
     }
 
 
