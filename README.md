@@ -13,9 +13,9 @@ This app is for learning purposes, written in Kotlin, showcases MVVM architectur
 <br/>
 
 <div class="row">
-<img src="images/screenshots/scr1.jpeg" width="150">
-<img src="images/screenshots/scr2.jpeg" width="150">
-<img src="images/screenshots/scr3.jpeg" width="150">
+<img src="images/screenshots/scr1.jpeg" width="250">
+<img src="images/screenshots/scr2.jpeg" width="250">
+<img src="images/screenshots/scr3.jpeg" width="250">
 </div>
 
 <br/>
