@@ -44,7 +44,7 @@ class MoviesListAdapter(private var context: ItemClickListener, itemList: ArrayL
                 Glide.with(context as Context).load(imageUrl).placeholder(R.drawable.ic_launcher_foreground).into(viewHolder.imageView)
             }
             viewHolder.cardView.setOnClickListener {
-                mClickListener.onItemClick(filteredList[position], viewHolder.imageView)
+                mClickListener.onItemClick(filteredList[position], viewHolder)
             }
         }
     }
@@ -83,7 +83,7 @@ class MoviesListAdapter(private var context: ItemClickListener, itemList: ArrayL
 
     // parent activity will implement this method to respond to click events
     interface ItemClickListener {
-        fun onItemClick(movie: Movie, imageView: ImageView)
+        fun onItemClick(movie: Movie, viewHolder: ViewHolder)
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

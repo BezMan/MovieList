@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MovieList</string>
     <string name="shared_animation_imageview">animation_element_imageview</string>
+    <string name="shared_animation_title">animation_element_title</string>
 </resources>

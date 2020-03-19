@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
@@ -13,10 +14,11 @@
 
     <ImageView
         android:id="@+id/detailImage"
-        android:transitionName="@string/shared_animation_imageview"
         android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_height="0dp" />
+        android:transitionName="@string/shared_animation_imageview"
+        tools:src="@drawable/ic_launcher_foreground" />
 
     <TextView
         android:id="@+id/detailTitle"
@@ -25,7 +27,8 @@
         android:layout_margin="10dp"
         android:text="title"
         android:textColor="@android:color/white"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:transitionName="@string/shared_animation_title" />
 
     <TextView
         android:id="@+id/detailYear"
