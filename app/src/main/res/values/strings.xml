@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">MovieListKotlin</string>
+    <string name="app_name">MovieList</string>
+    <string name="shared_animation_imageview">animation_element_imageview</string>
 </resources>

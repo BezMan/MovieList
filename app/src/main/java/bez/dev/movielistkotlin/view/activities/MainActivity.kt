@@ -1,11 +1,13 @@
 package bez.dev.movielistkotlin.view.activities
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -102,10 +104,12 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
         }
     }
 
-    override fun onItemClick(movie: Movie) {
+    override fun onItemClick(movie: Movie, imageView: ImageView) {
         val intent = Intent(this, DetailActivity::class.java)
         intent.putExtra(EXTRA_MOVIE, movie)
-        startActivity(intent)
+        val options =  ActivityOptions.makeSceneTransitionAnimation(
+            this, imageView ,getString(R.string.shared_animation_imageview))  // The transition name to be matched in Activity B.
+        startActivity(intent, options.toBundle())
     }
 
 

@@ -41,11 +41,10 @@ class MoviesListAdapter(private var context: ItemClickListener, itemList: ArrayL
 
             val imageUrl = filteredList[position].image
             if(imageUrl.isNotEmpty()) {
-                Glide.with(context as Context).load(imageUrl).into(viewHolder.iconImg)
+                Glide.with(context as Context).load(imageUrl).into(viewHolder.imageView)
             }
             viewHolder.cardView.setOnClickListener {
-                mClickListener.onItemClick(filteredList[position])
-
+                mClickListener.onItemClick(filteredList[position], viewHolder.imageView)
             }
         }
     }
@@ -78,13 +77,13 @@ class MoviesListAdapter(private var context: ItemClickListener, itemList: ArrayL
 
     // parent activity will implement this method to respond to click events
     interface ItemClickListener {
-        fun onItemClick(movie: Movie)
+        fun onItemClick(movie: Movie, imageView: ImageView)
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var tvTitle: TextView = view.tvTitle
         var tvReleaseYear: TextView = view.tvReleaseYear
-        var iconImg: ImageView = view.iconImg
+        var imageView: ImageView = view.listItemImage
         var cardView: CardView = view.cardView
     }
 }

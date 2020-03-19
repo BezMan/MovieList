@@ -24,13 +24,13 @@
             android:lines="2"
             android:textColor="@color/cardview_dark_background"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:layout_constraintEnd_toStartOf="@id/iconImg"
+            app:layout_constraintEnd_toStartOf="@id/listItemImage"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="MOVIE TITLE MOVIE TITLE MOVIE TITLE " />
 
             <ImageView
-                android:id="@+id/iconImg"
+                android:id="@+id/listItemImage"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -47,7 +47,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/iconImg"
+                app:layout_constraintEnd_toStartOf="@id/listItemImage"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvTitle"
                 tools:text="description" />
