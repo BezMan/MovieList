@@ -21,7 +21,7 @@ interface MovieDao {
     @Query("DELETE FROM movie_table")
     fun deleteAllMovies()
 
-    @Query("SELECT * FROM movie_table ORDER BY releaseYear DESC")
+    @Query("SELECT * FROM movie_table")
     fun getAllMoviesByYear(): Maybe<List<Movie>>
 }
 

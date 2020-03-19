@@ -36,7 +36,7 @@ class DetailActivity : AppCompatActivity() {
 
         val imageUrl = movieObj.image
         if (imageUrl.isNotEmpty()) {
-            Glide.with(this).load(imageUrl).into(detailImage)
+            Glide.with(this).load(imageUrl).placeholder(R.drawable.ic_launcher_foreground).into(detailImage)
         }
     }
 

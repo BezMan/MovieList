@@ -41,7 +41,7 @@ class MoviesListAdapter(private var context: ItemClickListener, itemList: ArrayL
 
             val imageUrl = filteredList[position].image
             if(imageUrl.isNotEmpty()) {
-                Glide.with(context as Context).load(imageUrl).into(viewHolder.imageView)
+                Glide.with(context as Context).load(imageUrl).placeholder(R.drawable.ic_launcher_foreground).into(viewHolder.imageView)
             }
             viewHolder.cardView.setOnClickListener {
                 mClickListener.onItemClick(filteredList[position], viewHolder.imageView)
@@ -71,6 +71,12 @@ class MoviesListAdapter(private var context: ItemClickListener, itemList: ArrayL
                 }
             }
         }
+
+        filteredList.sortWith(Comparator { lhs, rhs ->
+            // -1 == less than (shown first), 1 == greater than, 0 == equal
+            if (lhs.releaseYear > rhs.releaseYear) -1 /*else if (lhs.title < rhs.title) 1*/ else 0
+        })
+
         notifyDataSetChanged()
     }
 

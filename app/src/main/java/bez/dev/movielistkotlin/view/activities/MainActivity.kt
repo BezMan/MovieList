@@ -64,6 +64,12 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
             moviesListAdapter = MoviesListAdapter(this, listMovieObjects)
             recyclerViewMain?.adapter = moviesListAdapter
+
+            listMovieObjects.sortWith(Comparator { lhs, rhs ->
+                // -1 == less than (shown first), 1 == greater than, 0 == equal
+                if (lhs.releaseYear > rhs.releaseYear) -1 /*else if (lhs.title < rhs.title) 1*/ else 0
+            })
+
             moviesListAdapter.notifyDataSetChanged()
 
         }
