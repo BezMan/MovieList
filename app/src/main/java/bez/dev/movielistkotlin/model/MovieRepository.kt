@@ -44,12 +44,12 @@ class MovieRepository {
 
 
     private fun insertListToDB(movieList: List<Movie>) {
-        return movieDao.insert(movieList)
+        movieDao.insert(movieList)
     }
 
 
     fun insert(movie: Movie) {
-        return movieDao.insert(movie)
+        movieDao.insert(movie)
     }
 
 
