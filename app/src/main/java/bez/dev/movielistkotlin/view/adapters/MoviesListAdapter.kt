@@ -20,11 +20,7 @@ class MoviesListAdapter(private var context: ItemClickListener, itemList: ArrayL
     private var filteredList: ArrayList<Movie> = itemList
     private var fullList: ArrayList<Movie> = itemList
 
-    private lateinit var mClickListener: ItemClickListener
-
-    init {
-        setOnItemClickListener(context)
-    }
+    private var mClickListener: ItemClickListener = context
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         val view =
@@ -54,14 +50,8 @@ class MoviesListAdapter(private var context: ItemClickListener, itemList: ArrayL
     }
 
 
-    // allows clicks events to be caught
-    private fun setOnItemClickListener(itemClickListener: ItemClickListener) {
-        mClickListener = itemClickListener
-    }
-
-
     fun searchFilter(query: String) {
-        if (query == "") {
+        if (query.isBlank()) {
             filteredList = ArrayList(fullList)
         } else {
             filteredList.clear()
