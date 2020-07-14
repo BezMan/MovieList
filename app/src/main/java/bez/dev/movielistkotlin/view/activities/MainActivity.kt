@@ -3,96 +3,88 @@ package bez.dev.movielistkotlin.view.activities
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.util.Pair
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import bez.dev.movielistkotlin.R
 import bez.dev.movielistkotlin.model.Movie
 import bez.dev.movielistkotlin.view.adapters.MoviesListAdapter
-import bez.dev.movielistkotlin.viewmodel.MainListViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import bez.dev.movielistkotlin.viewmodel.MainActivityViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
-    private lateinit var listMovieObjects: ArrayList<Movie>
     private lateinit var moviesListAdapter: MoviesListAdapter
-
+    private lateinit var mViewModel: MainActivityViewModel
     private lateinit var searchView: SearchView
 
-    private val mViewModel: MainListViewModel =  MainListViewModel()
-
-    private var bag = CompositeDisposable()
+    private val observer = Observer <MutableList<Movie>> {
+        moviesListAdapter = MoviesListAdapter(this, it)
+        recyclerViewMain?.adapter = moviesListAdapter
+        swipeRefreshLayout.isRefreshing = false
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        actionBarChoose.setTitle(R.string.app_name)
-        setSupportActionBar(actionBarChoose)
+        initViewModel()
 
-        listMovieObjects = ArrayList()
+        initActionBar()
 
         initRecyclerView()
+
         setupSwipeRefresh()
 
         fetchMoviesData()
 
     }
 
+    private fun initActionBar() {
+        actionBarChoose.setTitle(R.string.app_name)
+        setSupportActionBar(actionBarChoose)
+    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        bag.clear()
+    private fun initViewModel() {
+        mViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
     }
 
 
-    private fun refreshList(listData: List<Movie>) {
-
-        if (!listData.isNullOrEmpty()) {
-            listMovieObjects.clear()
-
-            listMovieObjects = listData as ArrayList<Movie>
-
-            moviesListAdapter = MoviesListAdapter(this, listMovieObjects)
-            recyclerViewMain?.adapter = moviesListAdapter
-
-            listMovieObjects.sortWith(Comparator { lhs, rhs ->
-                // -1 == less than (shown first), 1 == greater than, 0 == equal
-                if (lhs.releaseYear > rhs.releaseYear) -1 /*else if (lhs.title < rhs.title) 1*/ else 0
-            })
-
-            moviesListAdapter.notifyDataSetChanged()
-
-        }
-        else{
-            network_error_message.visibility = View.VISIBLE
-        }
-        swipeRefreshLayout.isRefreshing = false
-    }
+//    private fun refreshList(listData: List<Movie>) {
+//
+//        if (!listData.isNullOrEmpty()) {
+//            listMovieObjects.clear()
+//
+//            listMovieObjects = listData as ArrayList<Movie>
+//
+//            moviesListAdapter = MoviesListAdapter(this, listMovieObjects)
+//            recyclerViewMain?.adapter = moviesListAdapter
+//
+//            listMovieObjects.sortWith(Comparator { lhs, rhs ->
+//                // -1 == less than (shown first), 1 == greater than, 0 == equal
+//                if (lhs.releaseYear > rhs.releaseYear) -1 /*else if (lhs.title < rhs.title) 1*/ else 0
+//            })
+//
+//            moviesListAdapter.notifyDataSetChanged()
+//
+//        }
+//        else{
+//            network_error_message.visibility = View.VISIBLE
+//        }
+//        swipeRefreshLayout.isRefreshing = false
+//    }
 
 
     private fun fetchMoviesData() {
-        val disposable = mViewModel.fetchMovies().
-            observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                {
-                    refreshList(it)
-                },
-                { error -> Log.e("callbackNetwork","$error") }
-            )
-        bag.add(disposable)
-
+        mViewModel.fetchMovies().observe(this, observer)
     }
 
 
@@ -100,9 +92,6 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     private fun initRecyclerView() {
         recyclerViewMain?.layoutManager = LinearLayoutManager(this)
         recyclerViewMain?.setHasFixedSize(true)
-
-        moviesListAdapter = MoviesListAdapter(this, listMovieObjects)
-        recyclerViewMain?.adapter = moviesListAdapter
     }
 
     private fun setupSwipeRefresh() {

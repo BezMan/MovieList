@@ -1,32 +1,47 @@
 package bez.dev.movielistkotlin.model
 
-import io.reactivex.Maybe
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
 class MovieNetwork {
 
-    private val moviesBaseUrl = "https://api.androidhive.info/"
+    private val baseUrl = "https://api.androidhive.info/"
 
-    private val retrofitMovieInstance = Retrofit.Builder().baseUrl(moviesBaseUrl)
+    var liveMovieList: MutableLiveData<MutableList<Movie>> = MutableLiveData()
+
+    private val retrofit = Retrofit.Builder().baseUrl(baseUrl)
         .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .build()
 
-    private val movieCall = retrofitMovieInstance.create(RequestInterface::class.java)
+
+    fun fetchMoviesData(): LiveData<MutableList<Movie>> {
+        moviesRequest()
+        return liveMovieList
+    }
 
 
-    fun fetchMoviesData(): Maybe<List<Movie>> {
-        return movieCall.fetchJsonData()
+    private fun moviesRequest() {
+        val call = retrofit.create(RequestInterface::class.java).fetchJsonData()
+
+        call?.enqueue(object : Callback<ArrayList<Movie>> {
+            override fun onResponse(call: Call<ArrayList<Movie>>, response: Response<ArrayList<Movie>>) {
+                liveMovieList.postValue(response.body())
+            }
+
+            override fun onFailure(call: Call<ArrayList<Movie>>, t: Throwable) {}
+        })
     }
 
 
     interface RequestInterface {
         @GET("json/movies.json")
-        fun fetchJsonData(): Maybe<List<Movie>>
+        fun fetchJsonData(): Call<ArrayList<Movie>>?
     }
-
 
 }

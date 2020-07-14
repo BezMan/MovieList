@@ -1,7 +1,7 @@
 package bez.dev.movielistkotlin.model
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
-import io.reactivex.Maybe
 
 @Dao
 interface MovieDao {
@@ -22,6 +22,6 @@ interface MovieDao {
     fun deleteAllMovies()
 
     @Query("SELECT * FROM movie_table")
-    fun getAllMoviesByYear(): Maybe<List<Movie>>
+    fun getAllMoviesByYear(): LiveData<MutableList<Movie>>
 }
 

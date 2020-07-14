@@ -1,9 +1,8 @@
 package bez.dev.movielistkotlin.model
 
+import androidx.lifecycle.LiveData
 import bez.dev.movielistkotlin.App
 import bez.dev.movielistkotlin.Utils
-import io.reactivex.Maybe
-import io.reactivex.schedulers.Schedulers
 
 
 class MovieRepository {
@@ -12,34 +11,22 @@ class MovieRepository {
     private val movieDao: MovieDao = App.database.movieDao()
 
 
-    fun fetchMoviesData(): Maybe<List<Movie>> {
+    fun fetchMoviesData(): LiveData<MutableList<Movie>> {
         return if (Utils.isNetworkAvailable(App.appContext))
-            fetchFromNetwork()
+            return fetchFromNetwork()
         else {
             fetchFromDatabase()
         }
     }
 
 
-    private fun fetchFromDatabase(): Maybe<List<Movie>> {
+    private fun fetchFromDatabase(): LiveData<MutableList<Movie>> {
         return movieDao.getAllMoviesByYear()
-            .observeOn(Schedulers.io())
-            .subscribeOn(Schedulers.io())
-            .flatMap {
-                Maybe.just(it) //return DB data
-            }
     }
 
 
-    private fun fetchFromNetwork(): Maybe<List<Movie>> {
+    private fun fetchFromNetwork(): LiveData<MutableList<Movie>> {
         return movieNetwork.fetchMoviesData()
-            .observeOn(Schedulers.io())
-            .subscribeOn(Schedulers.io())
-            .filter { it.isNotEmpty() }
-            .flatMap {
-                insertListToDB(it)
-                Maybe.just(it)
-            }
     }
 
 
