@@ -7,6 +7,7 @@ import bez.dev.movielistkotlin.model.MovieRepository
 
 class MainActivityViewModel: ViewModel() {
 
+    var itemList: MutableList<Movie> = mutableListOf()
     private val movieRepository = MovieRepository()
 
     fun fetchMovies(): LiveData<MutableList<Movie>> {

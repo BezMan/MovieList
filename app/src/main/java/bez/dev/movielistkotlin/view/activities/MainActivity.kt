@@ -25,8 +25,14 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     private lateinit var mViewModel: MainActivityViewModel
     private lateinit var searchView: SearchView
 
+
     private val observer = Observer <MutableList<Movie>> {
-        moviesListAdapter = MoviesListAdapter(this, it)
+        mViewModel.itemList = it
+        refreshList()
+    }
+
+    private fun refreshList() {
+        moviesListAdapter = MoviesListAdapter(this, mViewModel.itemList)
         recyclerViewMain?.adapter = moviesListAdapter
         swipeRefreshLayout.isRefreshing = false
     }
@@ -44,9 +50,20 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
         setupSwipeRefresh()
 
-        fetchMoviesData()
+        // if `onCreate` is called as a result of configuration change
+        if (savedInstanceState==null || !savedInstanceState.getBoolean(ROTATION_CONST)) {
+            fetchMoviesData()
+        }
+
 
     }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(ROTATION_CONST, isChangingConfigurations);
+    }
+
 
     private fun initActionBar() {
         actionBarChoose.setTitle(R.string.app_name)
@@ -92,6 +109,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     private fun initRecyclerView() {
         recyclerViewMain?.layoutManager = LinearLayoutManager(this)
         recyclerViewMain?.setHasFixedSize(true)
+        refreshList()
     }
 
     private fun setupSwipeRefresh() {
@@ -149,6 +167,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
     companion object {
         const val EXTRA_MOVIE = "EXTRA_MOVIE"
+        private const val ROTATION_CONST = "isConfigurationChange"
     }
 
 }
