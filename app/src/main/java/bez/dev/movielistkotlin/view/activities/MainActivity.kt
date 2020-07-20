@@ -35,18 +35,17 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
         filterByText(mViewModel.filterText)
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         initViewModel()
 
+        initToolbarSearch()
+
         initRecyclerView()
 
         setupSwipeRefresh()
-
-        initSearchView()
 
         // if `onCreate` is called as a result of configuration change
         if (savedInstanceState==null || !savedInstanceState.getBoolean(ROTATION_CONST)) {
@@ -60,6 +59,33 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(ROTATION_CONST, isChangingConfigurations);
+    }
+
+
+    override fun onBackPressed() {
+        if (!searchView.isIconified) {
+            searchView.isIconified = true
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    private fun initToolbarSearch() {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            //when the user presses enter
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            //when the text changes
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if(moviesListAdapter != null) { // on screen rotation do not filter again
+                    filterByText(newText!!)
+                }
+                return true
+            }
+        })
     }
 
 
@@ -103,25 +129,6 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     fun filterByText(text: String) {
         mViewModel.filterText = text
         moviesListAdapter?.filterList(mViewModel.filterText)
-    }
-
-
-    private fun initSearchView() {
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-
-            //when the user presses enter
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return true
-            }
-
-            //when the text changes
-            override fun onQueryTextChange(newText: String?): Boolean {
-                if(moviesListAdapter != null) { // on screen rotation do not filter again
-                    filterByText(newText!!)
-                }
-                return true
-            }
-        })
     }
 
 
