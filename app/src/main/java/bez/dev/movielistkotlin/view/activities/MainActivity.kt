@@ -19,20 +19,20 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
-    private lateinit var moviesListAdapter: MoviesListAdapter
+    private var moviesListAdapter: MoviesListAdapter? = null
     private lateinit var mViewModel: MainActivityViewModel
 
 
-    private val observer = Observer <MutableList<Movie>> {
+    private val movieListObserver = Observer <MutableList<Movie>> {
         mViewModel.itemList = it
         refreshList()
     }
 
     private fun refreshList() {
-        moviesListAdapter = MoviesListAdapter(this)
+        moviesListAdapter = MoviesListAdapter(this, mViewModel.itemList)
         recyclerViewMain?.adapter = moviesListAdapter
         swipeRefreshLayout.isRefreshing = false
-        searchFilter(mViewModel.filterText)
+        filterByText(mViewModel.filterText)
     }
 
 
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
 
     private fun fetchMoviesData() {
-        mViewModel.fetchMovies().observe(this, observer)
+        mViewModel.fetchMovies().observe(this, movieListObserver)
     }
 
 
@@ -100,15 +100,13 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     }
 
 
-    fun searchFilter(text: String) {
+    fun filterByText(text: String) {
         mViewModel.filterText = text
-        moviesListAdapter.searchFilter(mViewModel.itemList, mViewModel.filterText)
+        moviesListAdapter?.filterList(mViewModel.filterText)
     }
 
 
     private fun initSearchView() {
-        searchView.queryHint = "Search movie..."
-
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             //when the user presses enter
@@ -118,7 +116,9 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
             //when the text changes
             override fun onQueryTextChange(newText: String?): Boolean {
-                searchFilter(newText!!)
+                if(moviesListAdapter != null) { // on screen rotation do not filter again
+                    filterByText(newText!!)
+                }
                 return true
             }
         })
