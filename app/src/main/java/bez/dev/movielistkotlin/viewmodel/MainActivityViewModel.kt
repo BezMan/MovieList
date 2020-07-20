@@ -7,7 +7,7 @@ import bez.dev.movielistkotlin.model.MovieRepository
 
 class MainActivityViewModel: ViewModel() {
 
-    var filterText: String = ""
+    var searchText: String = ""
     var itemList: MutableList<Movie> = mutableListOf()
     private val movieRepository = MovieRepository()
 

@@ -20,20 +20,14 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
     private var moviesListAdapter: MoviesListAdapter? = null
-    private lateinit var mViewModel: MainActivityViewModel
+    private lateinit var viewModel: MainActivityViewModel
 
 
     private val movieListObserver = Observer <MutableList<Movie>> {
-        mViewModel.itemList = it
+        viewModel.itemList = it
         refreshList()
     }
 
-    private fun refreshList() {
-        moviesListAdapter = MoviesListAdapter(this, mViewModel.itemList)
-        recyclerViewMain?.adapter = moviesListAdapter
-        swipeRefreshLayout.isRefreshing = false
-        filterByText(mViewModel.filterText)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,24 +35,23 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
         initViewModel()
 
-        initToolbarSearch()
+        initSearchListener()
 
         initRecyclerView()
 
         setupSwipeRefresh()
 
-        // if `onCreate` is called as a result of configuration change
-        if (savedInstanceState==null || !savedInstanceState.getBoolean(ROTATION_CONST)) {
+        if (savedInstanceState==null || !savedInstanceState.getBoolean(IS_ROTATED)) {
+            // if `onCreate` is NOT called as a result of rotation/configuration change
             fetchMoviesData()
         }
-
 
     }
 
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean(ROTATION_CONST, isChangingConfigurations);
+        outState.putBoolean(IS_ROTATED, isChangingConfigurations)
     }
 
 
@@ -70,7 +63,16 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
         }
     }
 
-    private fun initToolbarSearch() {
+
+    private fun refreshList() {
+        moviesListAdapter = MoviesListAdapter(this, viewModel.itemList)
+        recyclerViewMain?.adapter = moviesListAdapter
+        swipeRefreshLayout.isRefreshing = false
+        moviesListAdapter?.filterList(viewModel.searchText)
+    }
+
+
+    private fun initSearchListener() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             //when the user presses enter
@@ -81,7 +83,8 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
             //when the text changes
             override fun onQueryTextChange(newText: String?): Boolean {
                 if(moviesListAdapter != null) { // on screen rotation do not filter again
-                    filterByText(newText!!)
+                    viewModel.searchText = newText!!
+                    moviesListAdapter?.filterList(newText)
                 }
                 return true
             }
@@ -90,12 +93,12 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
 
     private fun initViewModel() {
-        mViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
     }
 
 
     private fun fetchMoviesData() {
-        mViewModel.fetchMovies().observe(this, movieListObserver)
+        viewModel.fetchMovies().observe(this, movieListObserver)
     }
 
 
@@ -126,15 +129,9 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     }
 
 
-    fun filterByText(text: String) {
-        mViewModel.filterText = text
-        moviesListAdapter?.filterList(mViewModel.filterText)
-    }
-
-
     companion object {
         const val EXTRA_MOVIE = "EXTRA_MOVIE"
-        private const val ROTATION_CONST = "isConfigurationChange"
+        private const val IS_ROTATED = "isConfigurationChange"
     }
 
 }
