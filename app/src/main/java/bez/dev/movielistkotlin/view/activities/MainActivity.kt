@@ -4,8 +4,6 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.util.Pair
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -23,7 +21,6 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
     private lateinit var moviesListAdapter: MoviesListAdapter
     private lateinit var mViewModel: MainActivityViewModel
-    private lateinit var searchView: SearchView
 
 
     private val observer = Observer <MutableList<Movie>> {
@@ -32,9 +29,10 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     }
 
     private fun refreshList() {
-        moviesListAdapter = MoviesListAdapter(this, mViewModel.itemList)
+        moviesListAdapter = MoviesListAdapter(this)
         recyclerViewMain?.adapter = moviesListAdapter
         swipeRefreshLayout.isRefreshing = false
+        searchFilter(mViewModel.filterText)
     }
 
 
@@ -44,11 +42,11 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
         initViewModel()
 
-        initActionBar()
-
         initRecyclerView()
 
         setupSwipeRefresh()
+
+        initSearchView()
 
         // if `onCreate` is called as a result of configuration change
         if (savedInstanceState==null || !savedInstanceState.getBoolean(ROTATION_CONST)) {
@@ -65,39 +63,9 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     }
 
 
-    private fun initActionBar() {
-        actionBarChoose.setTitle(R.string.app_name)
-        setSupportActionBar(actionBarChoose)
-    }
-
     private fun initViewModel() {
         mViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
     }
-
-
-//    private fun refreshList(listData: List<Movie>) {
-//
-//        if (!listData.isNullOrEmpty()) {
-//            listMovieObjects.clear()
-//
-//            listMovieObjects = listData as ArrayList<Movie>
-//
-//            moviesListAdapter = MoviesListAdapter(this, listMovieObjects)
-//            recyclerViewMain?.adapter = moviesListAdapter
-//
-//            listMovieObjects.sortWith(Comparator { lhs, rhs ->
-//                // -1 == less than (shown first), 1 == greater than, 0 == equal
-//                if (lhs.releaseYear > rhs.releaseYear) -1 /*else if (lhs.title < rhs.title) 1*/ else 0
-//            })
-//
-//            moviesListAdapter.notifyDataSetChanged()
-//
-//        }
-//        else{
-//            network_error_message.visibility = View.VISIBLE
-//        }
-//        swipeRefreshLayout.isRefreshing = false
-//    }
 
 
     private fun fetchMoviesData() {
@@ -133,20 +101,12 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
 
     fun searchFilter(text: String) {
-        moviesListAdapter.searchFilter(text)
+        mViewModel.filterText = text
+        moviesListAdapter.searchFilter(mViewModel.itemList, mViewModel.filterText)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_choose, menu)
 
-        val itemSearch = menu?.findItem(R.id.icSearch)
-        initSearchView(itemSearch)
-
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    private fun initSearchView(itemSearch: MenuItem?) {
-        searchView = itemSearch?.actionView as SearchView
+    private fun initSearchView() {
         searchView.queryHint = "Search movie..."
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
