@@ -7,10 +7,21 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/actionBarWeather"
+        android:id="@+id/detailToolbar"
         style="@style/ToolbarCustom"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize" />
+        android:layout_height="?attr/actionBarSize" >
+
+        <TextView
+            android:id="@+id/detailToolbar_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textStyle="bold"
+            android:transitionName="@string/shared_animation_title"/>
+
+    </androidx.appcompat.widget.Toolbar>
 
     <ImageView
         android:id="@+id/detailImage"
@@ -27,8 +38,7 @@
         android:layout_margin="10dp"
         android:text="title"
         android:textColor="@android:color/white"
-        android:textSize="20sp"
-        android:transitionName="@string/shared_animation_title" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/detailYear"

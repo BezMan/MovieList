@@ -9,12 +9,16 @@ import kotlinx.android.synthetic.main.activity_detail.*
 
 class DetailActivity : AppCompatActivity() {
 
+    private lateinit var movieObj: Movie
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
+        getMovieData()
+
         initToolbar()
+
         populateViews()
 
     }
@@ -27,23 +31,24 @@ class DetailActivity : AppCompatActivity() {
 
 
     private fun populateViews() {
-        val movieObj = intent.getParcelableExtra(MainActivity.EXTRA_MOVIE) as Movie
-
         detailTitle.text = movieObj.title
         detailYear.text = movieObj.releaseYear.toString()
         detailGenre.text = movieObj.genre.toString()
         detailRating.text = movieObj.rating.toString()
 
-        val imageUrl = movieObj.image
-        if (imageUrl.isNotEmpty()) {
-            Glide.with(this).load(imageUrl).placeholder(R.drawable.ic_launcher_foreground).into(detailImage)
+        if (movieObj.image.isNotEmpty()) {
+            Glide.with(this).load(movieObj.image).placeholder(R.drawable.ic_launcher_foreground).into(detailImage)
         }
+    }
+
+    private fun getMovieData() {
+        movieObj = intent.getParcelableExtra(MainActivity.EXTRA_MOVIE) as Movie
     }
 
 
     private fun initToolbar() {
-        actionBarWeather?.setTitle(R.string.app_name)
-        setSupportActionBar(actionBarWeather)
+        detailToolbar_text.text = movieObj.title
+        setSupportActionBar(detailToolbar)
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
     }
