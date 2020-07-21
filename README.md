@@ -10,6 +10,7 @@ This app is for learning purposes, written in Kotlin and showcasing MVVM archite
 - Querying database for movies, ordered by releaseYear.
 - SearchView for filtering results by title.
 - Pull to refresh and send network request. 
+- Animation example transitioning views between activities.
 
 <br/>
 
