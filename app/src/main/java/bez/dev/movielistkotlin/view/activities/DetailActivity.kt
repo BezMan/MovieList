@@ -31,7 +31,6 @@ class DetailActivity : AppCompatActivity() {
 
 
     private fun populateViews() {
-        detailTitle.text = movieObj.title
         detailYear.text = movieObj.releaseYear.toString()
         detailGenre.text = movieObj.genre.toString()
         detailRating.text = movieObj.rating.toString()

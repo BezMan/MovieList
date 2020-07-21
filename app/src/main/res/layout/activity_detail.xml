@@ -18,8 +18,10 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold"
-            android:transitionName="@string/shared_animation_title"/>
+            android:transitionName="@string/shared_animation_title"
+            tools:text="Movie Title" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -32,20 +34,11 @@
         tools:src="@drawable/ic_launcher_foreground" />
 
     <TextView
-        android:id="@+id/detailTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="title"
-        android:textColor="@android:color/white"
-        android:textSize="20sp" />
-
-    <TextView
         android:id="@+id/detailYear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="year"
+        tools:text="year"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
 
@@ -54,7 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="rating"
+        tools:text="rating"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
 
@@ -63,7 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="genre"
+        tools:text="genre"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
 
