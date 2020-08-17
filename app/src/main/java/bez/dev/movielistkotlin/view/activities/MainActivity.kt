@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     private lateinit var viewModel: MainActivityViewModel
 
 
-    private val movieListObserver = Observer <MutableList<Movie>> {
+    private val movieListObserver = Observer <List<Movie>> {
         viewModel.itemList = it
         refreshList()
     }

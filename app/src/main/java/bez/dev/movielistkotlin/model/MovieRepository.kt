@@ -11,7 +11,7 @@ class MovieRepository {
     private val movieDao: MovieDao = App.database.movieDao()
 
 
-    fun fetchMoviesData(): LiveData<MutableList<Movie>> {
+    fun fetchMoviesData(): LiveData<List<Movie>> {
         return if (Utils.isNetworkAvailable(App.appContext))
             return fetchFromNetwork()
         else {
@@ -20,12 +20,12 @@ class MovieRepository {
     }
 
 
-    private fun fetchFromDatabase(): LiveData<MutableList<Movie>> {
+    private fun fetchFromDatabase(): LiveData<List<Movie>> {
         return movieDao.getAllMoviesByYear()
     }
 
 
-    private fun fetchFromNetwork(): LiveData<MutableList<Movie>> {
+    private fun fetchFromNetwork(): LiveData<List<Movie>> {
         return movieNetwork.fetchMoviesData()
     }
 

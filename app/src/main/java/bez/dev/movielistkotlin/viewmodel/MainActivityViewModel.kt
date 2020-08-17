@@ -8,10 +8,10 @@ import bez.dev.movielistkotlin.model.MovieRepository
 class MainActivityViewModel: ViewModel() {
 
     var searchText: String = ""
-    var itemList: MutableList<Movie> = mutableListOf()
+    var itemList: List<Movie> = mutableListOf()
     private val movieRepository = MovieRepository()
 
-    fun fetchMovies(): LiveData<MutableList<Movie>> {
+    fun fetchMovies(): LiveData<List<Movie>> {
         return movieRepository.fetchMoviesData()
     }
 

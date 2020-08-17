@@ -2,8 +2,9 @@ package bez.dev.movielistkotlin.model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import retrofit2.Call
-import retrofit2.Callback
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -13,35 +14,28 @@ class MovieNetwork {
 
     private val baseUrl = "https://api.androidhive.info/"
 
-    var liveMovieList: MutableLiveData<MutableList<Movie>> = MutableLiveData()
+    var liveMovieList: MutableLiveData<List<Movie>> = MutableLiveData()
 
     private val retrofit = Retrofit.Builder().baseUrl(baseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
+        .create(RequestInterface::class.java)
 
 
-    fun fetchMoviesData(): LiveData<MutableList<Movie>> {
-        moviesRequest()
-        return liveMovieList
-    }
-
-
-    private fun moviesRequest() {
-        val call = retrofit.create(RequestInterface::class.java).fetchJsonData()
-
-        call?.enqueue(object : Callback<ArrayList<Movie>> {
-            override fun onResponse(call: Call<ArrayList<Movie>>, response: Response<ArrayList<Movie>>) {
+    fun fetchMoviesData(): LiveData<List<Movie>> {
+        GlobalScope.launch(Dispatchers.IO) {
+            val response = retrofit.fetchJsonData()
+            if (response.isSuccessful) {
                 liveMovieList.postValue(response.body())
             }
-
-            override fun onFailure(call: Call<ArrayList<Movie>>, t: Throwable) {}
-        })
+        }
+        return liveMovieList
     }
 
 
     interface RequestInterface {
         @GET("json/movies.json")
-        fun fetchJsonData(): Call<ArrayList<Movie>>?
+        suspend fun fetchJsonData(): Response<List<Movie>>
     }
 
 }

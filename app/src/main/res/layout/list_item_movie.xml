@@ -30,7 +30,7 @@
             app:layout_constraintEnd_toStartOf="@id/listItemImage"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="MOVIE TITLE MOVIE TITLE MOVIEMOVIE TITLE MOVIE TITLE MOVIEMOVIE TITLE MOVIE TITLE MOVIE TITLE " />
+            tools:text="MOVIE TITLE" />
 
         <ImageView
             android:id="@+id/listItemImage"
@@ -39,6 +39,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/colorPrimary"
             tools:src="@drawable/ic_launcher_foreground" />
 
         <TextView

@@ -22,6 +22,6 @@ interface MovieDao {
     fun deleteAllMovies()
 
     @Query("SELECT * FROM movie_table")
-    fun getAllMoviesByYear(): LiveData<MutableList<Movie>>
+    fun getAllMoviesByYear(): LiveData<List<Movie>>
 }
 
