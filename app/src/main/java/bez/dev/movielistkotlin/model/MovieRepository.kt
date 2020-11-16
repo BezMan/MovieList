@@ -13,7 +13,7 @@ class MovieRepository {
 
     fun fetchMoviesData(): LiveData<List<Movie>> {
         return if (Utils.isNetworkAvailable(App.appContext))
-            return fetchFromNetwork()
+            fetchFromNetwork()
         else {
             fetchFromDatabase()
         }

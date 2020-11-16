@@ -41,11 +41,20 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
         setupSwipeRefresh()
 
-        if (savedInstanceState==null || !savedInstanceState.getBoolean(IS_ROTATED)) {
-            // if `onCreate` is NOT called as a result of rotation/configuration change
-            fetchMoviesData()
-        }
+        fetchAndDisplayData(savedInstanceState)
 
+    }
+
+
+    /** If `onCreate` is called as a result of rotation/configuration change,
+     * we only refresh UI without another network call */
+
+    private fun fetchAndDisplayData(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null || !savedInstanceState.getBoolean(IS_ROTATED)) {
+            fetchMoviesData()
+        } else {
+            refreshList()
+        }
     }
 
 
@@ -98,6 +107,7 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
 
 
     private fun fetchMoviesData() {
+        swipeRefreshLayout.isRefreshing = true
         viewModel.fetchMovies().observe(this, movieListObserver)
     }
 
@@ -106,7 +116,6 @@ class MainActivity : AppCompatActivity(), MoviesListAdapter.ItemClickListener {
     private fun initRecyclerView() {
         recyclerViewMain?.layoutManager = LinearLayoutManager(this)
         recyclerViewMain?.setHasFixedSize(true)
-        refreshList()
     }
 
     private fun setupSwipeRefresh() {
